@@ -29,6 +29,7 @@
                     android:text="모든 노트" />
 
                 <TextView
+                    android:id="@+id/tv_list_conut"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/all_text"
@@ -49,6 +50,13 @@
                     android:background="@android:color/white">
 
                 </android.support.v7.widget.RecyclerView>
+
+                <TextView
+                    android:id="@+id/tv_empty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="데이터가없습니다."
+                    android:visibility="gone"></TextView>
             </RelativeLayout>
 
         </LinearLayout>
@@ -64,7 +72,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btn_papago"
+                android:id="@+id/btn_add_memo"
                 android:layout_width="70dp"
                 android:layout_height="76dp"
                 android:background="@drawable/icon_check_on" />

@@ -6,13 +6,10 @@ import com.example.dmemo.BaseView;
 public interface MainContract {
     interface View extends BaseView {
 
-        //void completeMainInfoAPI();
-
-
         /**
-         * 지하철 클릭
+         * 메모 추가 클릭
          */
-       // void onClickButton1();
+        void onClickAddMemo();
 
 
     }
