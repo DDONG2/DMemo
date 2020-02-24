@@ -4,41 +4,49 @@ import java.util.ArrayList;
 
 public class memoListDTO {
 
-    private String subjectText;
-    private String dateText;
-    private String imagePath;
+    private String title;
+    private String content;
+    private String date;
+  //  private String imagePath;
 
+//
+//    public memoListDTO(String title, String content, String date, String imagepath) {
+//        super();
+//        this.title = title;
+//        this.content = content;
+//        this.date = date;
+//        this.imagePath = imagepath;
+//    }
 
-    public memoListDTO(String subjecttext, String datetext, String imagepath) {
-        super();
-        this.subjectText = subjecttext;
-        this.dateText = datetext;
-        this.imagePath = imagepath;
-
+    public String getTitle() {
+        return title;
     }
 
-
-    public String getSubjectText() {
-        return subjectText;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setSubjectText(String subjectText) {
-        this.subjectText = subjectText;
+    public String getContent() {
+        return content;
     }
 
-    public String getDateText() {
-        return dateText;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public void setDateText(String dateText) {
-        this.dateText = dateText;
+    public String getDate() {
+        return date;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
-    }
+//    public String getImagePath() {
+//        return imagePath;
+//    }
+//
+//    public void setImagePath(String imagePath) {
+//        this.imagePath = imagePath;
+//    }
 }
