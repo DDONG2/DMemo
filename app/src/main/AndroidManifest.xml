@@ -20,7 +20,7 @@
 
         <activity
             android:name=".Memo.AddMemoActivity"
-            android:label="Test"
+            android:label="AddMemo"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
 

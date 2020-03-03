@@ -43,8 +43,8 @@
             android:ems="10"
             android:textSize="20dp"
             android:gravity="top"
-            android:textCursorDrawable="@null"
-            android:hint="제목을 입력하세요." />
+            android:hint="제목을 입력하세요."
+            android:textCursorDrawable="@null" />
 
         <EditText
             android:id="@+id/et_content"
@@ -56,7 +56,6 @@
             android:ems="10"
             android:hint="내용을 입력하세요."
             />
-
     </LinearLayout>
 
         <LinearLayout
