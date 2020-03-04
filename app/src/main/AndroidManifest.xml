@@ -24,6 +24,12 @@
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".Memo.MemoDetailActivity"
+            android:label="AddMemo"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait" />
+
 
 <!--        <activity-->
 <!--            android:name=".Activity.ProfileActivity"-->

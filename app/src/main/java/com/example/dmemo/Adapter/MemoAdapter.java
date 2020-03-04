@@ -1,6 +1,7 @@
 package com.example.dmemo.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dmemo.Memo.MemoDetailActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.dateDTO.memoListDTO;
 
@@ -44,11 +46,25 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     @Override
     public void onBindViewHolder(final MemoViewHolder holder, int position) {
 
-        memoListDTO item = feedList.get(position);
+        final memoListDTO item = feedList.get(position);
 
 
         holder.tv_title.setText(item.getTitle());
         holder.tv_date.setText(item.getDate());
+
+        holder.ll_memo_list.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MemoDetailActivity.class);
+                intent.putExtra("title", item.getTitle());
+                intent.putExtra("content", item.getContent());
+                intent.putExtra("date", item.getDate());
+                context.startActivity(intent);
+            }
+        });
+
+
 
     }
 
@@ -73,6 +89,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
         @BindView(R.id.iv_indicator)
         ImageView iv_indicator;
+
+        @BindView(R.id.ll_memo_list)
+        LinearLayout ll_memo_list;
 
         public MemoViewHolder(View itemView) {
             super(itemView);
