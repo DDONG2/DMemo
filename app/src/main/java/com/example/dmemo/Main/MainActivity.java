@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,8 +53,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @BindView(R.id.ll_edit_select_bar)
     LinearLayout ll_edit_select_bar;
 
-    @BindView(R.id.btn_main_edit_submit)
-    Button btn_main_edit_submit;
+    @BindView(R.id.btn_main_delete)
+    Button btn_main_delete;
 
     /**
      * 애니메이션
@@ -61,12 +62,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private Animation anim_down;
     private Animation anim_up;
 
+    private  ArrayList<String> checkedIds = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        initAnimationView();
         initView();
 
     }
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void initView() {
-        initAnimationView();
+
 
         memoList.clear();
         DBHelper helper = new DBHelper(this);
@@ -106,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             tv_list_conut.setText(String.valueOf(memoList.size()));
             adapter = new MemoAdapter();
             adapter.setFeedList(memoList);
-            adapter.setCheckItemlistener(longClickListener);
+            adapter.setLongClickItemlistener(longClickListener);
+            adapter.setCheckItemlistener(itemCheckListener);
             rcMemoList.setAdapter(adapter);
 
             LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -146,9 +150,17 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
 
-    @OnClick(R.id.btn_main_edit_submit)
+    @OnClick(R.id.btn_main_delete)
     public void onClicksubmit() {
-
+        DBHelper helper = new DBHelper(this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        for (int i = 0; i < checkedIds.size(); i++) {
+            String sql = "delete from  mytable where _id = '" + checkedIds.get(i) + "'";
+            db.execSQL(sql);
+        }
+        checkedIds.clear();
+        initView();
+        ll_edit_select_bar.startAnimation(anim_up);
     }
 
 
@@ -222,7 +234,21 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     }
 
+    private CompoundButton.OnCheckedChangeListener itemCheckListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (buttonView.getTag().toString().indexOf(memoListDTO.class.getSimpleName()) > 0) {
+                memoListDTO memolist = (memoListDTO) buttonView.getTag();
+                    if (isChecked) {
+                        checkedIds.add(Integer.toString(memolist.getId()));
+                    } else {
+                        checkedIds.remove(Integer.toString(memolist.getId()));
+                    }
 
+            }
+
+        }
+    };
 
 
 

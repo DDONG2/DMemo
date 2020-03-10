@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,12 +34,20 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
     private View.OnLongClickListener onLongClickListener;
 
+    private CompoundButton.OnCheckedChangeListener checkItemlistener;
+
+    private memoListDTO memoListForCheckBox;
+
     public void setFeedList(ArrayList<memoListDTO> feedList) {
         this.feedList = feedList;
     }
 
-    public void setCheckItemlistener(View.OnLongClickListener listener) {
+    public void setLongClickItemlistener(View.OnLongClickListener listener) {
         this.onLongClickListener = listener;
+    }
+
+    public void setCheckItemlistener(CompoundButton.OnCheckedChangeListener checkItemlistener) {
+        this.checkItemlistener = checkItemlistener;
     }
 
     @Override
@@ -58,15 +67,21 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
         final memoListDTO item = feedList.get(position);
 
+        memoListForCheckBox = feedList.get(position);
 
         holder.tv_title.setText(item.getTitle());
         holder.tv_date.setText(item.getDate());
+        holder.cb_edit_selected.setTag(memoListForCheckBox);
         holder.cb_edit_selected.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
+        holder.cb_edit_selected.setOnCheckedChangeListener(checkItemlistener);
 
         holder.ll_memo_list.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                if (isEditMode) {
+                    return;
+                }
                 Intent intent = new Intent(context, MemoDetailActivity.class);
                 intent.putExtra("_id", item.getId());
                 intent.putExtra("title", item.getTitle());
@@ -75,6 +90,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
                 context.startActivity(intent);
             }
         });
+
 
         holder.ll_memo_list.setOnLongClickListener(onLongClickListener);
 
