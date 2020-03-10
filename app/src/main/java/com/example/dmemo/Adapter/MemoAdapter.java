@@ -57,6 +57,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, MemoDetailActivity.class);
+                intent.putExtra("_id", item.getId());
                 intent.putExtra("title", item.getTitle());
                 intent.putExtra("content", item.getContent());
                 intent.putExtra("date", item.getDate());

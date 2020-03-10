@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 public class memoListDTO {
 
+    private int _id;
     private String title;
     private String content;
     private String date;
-  //  private String imagePath;
+    //  private String imagePath;
 
-//
+    //
 //    public memoListDTO(String title, String content, String date, String imagepath) {
 //        super();
 //        this.title = title;
@@ -17,6 +18,13 @@ public class memoListDTO {
 //        this.date = date;
 //        this.imagePath = imagepath;
 //    }
+    public int getId() {
+        return _id;
+    }
+
+    public void setId(int _id) {
+        this._id = _id;
+    }
 
     public String getTitle() {
         return title;
@@ -41,6 +49,7 @@ public class memoListDTO {
     public void setDate(String date) {
         this.date = date;
     }
+
 
 //    public String getImagePath() {
 //        return imagePath;

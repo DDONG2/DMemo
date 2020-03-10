@@ -50,7 +50,23 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        initView();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initView();
+    }
+
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
+
+    @Override
+    public void initView() {
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
         Cursor cursor = db.rawQuery("select title, content, date, imagepath from mytable" + "         order by _id desc", null);
@@ -83,19 +99,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             tv_empty.setVisibility(View.VISIBLE);
             tv_list_conut.setText("0");
         }
-
-
-    }
-
-
-    @Override
-    public Context getActivityContext() {
-        return this;
-    }
-
-    @Override
-    public void initView() {
-
     }
 
     @Override
