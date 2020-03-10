@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dmemo.Main.MainActivity;
 import com.example.dmemo.Memo.MemoDetailActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.dateDTO.memoListDTO;
@@ -30,8 +31,14 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
     private boolean isEditMode = false;
 
+    private View.OnLongClickListener onLongClickListener;
+
     public void setFeedList(ArrayList<memoListDTO> feedList) {
         this.feedList = feedList;
+    }
+
+    public void setCheckItemlistener(View.OnLongClickListener listener) {
+        this.onLongClickListener = listener;
     }
 
     @Override
@@ -69,21 +76,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
             }
         });
 
-        holder.ll_memo_list.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                // 오랫동안 눌렀을 때 이벤트가 발생됨
-                Toast.makeText(context.getApplicationContext(),
-                        "롱클릭", Toast.LENGTH_SHORT).show();
-                setEditMode(true);
-                notifyDataSetChanged();
-                // 리턴값이 있다
-                // 이메서드에서 이벤트에대한 처리를 끝냈음
-                //    그래서 다른데서는 처리할 필요없음 true
-                // 여기서 이벤트 처리를 못했을 경우는 false
-                return true;
-            }
-        });
+        holder.ll_memo_list.setOnLongClickListener(onLongClickListener);
 
 
     }

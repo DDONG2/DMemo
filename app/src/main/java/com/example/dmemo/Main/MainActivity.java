@@ -9,8 +9,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dmemo.Adapter.MemoAdapter;
 import com.example.dmemo.Memo.AddMemoActivity;
@@ -19,6 +23,7 @@ import com.example.dmemo.Utils.DBHelper;
 import com.example.dmemo.dateDTO.memoListDTO;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +49,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @BindView(R.id.tv_list_conut)
     TextView tv_list_conut;
 
+    @BindView(R.id.ll_edit_select_bar)
+    LinearLayout ll_edit_select_bar;
+
+    @BindView(R.id.btn_main_edit_submit)
+    Button btn_main_edit_submit;
+
+    /**
+     * 애니메이션
+     */
+    private Animation anim_down;
+    private Animation anim_up;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void initView() {
+        initAnimationView();
+
         memoList.clear();
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -87,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             tv_list_conut.setText(String.valueOf(memoList.size()));
             adapter = new MemoAdapter();
             adapter.setFeedList(memoList);
+            adapter.setCheckItemlistener(longClickListener);
             rcMemoList.setAdapter(adapter);
 
             LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -103,8 +123,31 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     }
 
+    private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            // 오랫동안 눌렀을 때 이벤트가 발생됨
+            Toast.makeText(getApplicationContext(),
+                    "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
+            adapter.setEditMode(true);
+            adapter.notifyDataSetChanged();
+            ll_edit_select_bar.startAnimation(anim_down);
+            // 리턴값이 있다
+            // 이메서드에서 이벤트에대한 처리를 끝냈음
+            //    그래서 다른데서는 처리할 필요없음 true
+            // 여기서 이벤트 처리를 못했을 경우는 false
+            return true;
+        }
+    };
+
     @Override
     public void onClickClose() {
+
+    }
+
+
+    @OnClick(R.id.btn_main_edit_submit)
+    public void onClicksubmit() {
 
     }
 
@@ -116,6 +159,29 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         startActivity(intent);
     }
 
+    public void initAnimationView() {
+
+        anim_up = AnimationUtils.loadAnimation(this, R.anim.push_up);
+        anim_up.setAnimationListener(new FlowAnimationListener());
+
+        anim_down = AnimationUtils.loadAnimation(this, R.anim.push_down);
+        anim_down.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                ll_edit_select_bar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() {
@@ -124,7 +190,40 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         } else {
             adapter.setEditMode(false);
             adapter.notifyDataSetChanged();
+            ll_edit_select_bar.startAnimation(anim_up);
+
         }
     }
+
+    /**
+     * 애너매니션 콜백 클래스
+     */
+    private final class FlowAnimationListener implements
+            Animation.AnimationListener {
+
+        @Override
+        public void onAnimationStart(Animation animation) {
+            if (ll_edit_select_bar.getVisibility() == View.VISIBLE)
+                ll_edit_select_bar.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+
+        }
+
+
+
+
+    }
+
+
+
+
 
 }
