@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class memoListDTO {
 
-    private int _id;
+    private int id;
     private String title;
     private String content;
     private String date;
@@ -19,11 +19,11 @@ public class memoListDTO {
 //        this.imagePath = imagepath;
 //    }
     public int getId() {
-        return _id;
+        return id;
     }
 
     public void setId(int _id) {
-        this._id = _id;
+        this.id = _id;
     }
 
     public String getTitle() {

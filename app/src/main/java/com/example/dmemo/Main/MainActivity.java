@@ -67,12 +67,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void initView() {
+        memoList.clear();
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select title, content, date, imagepath from mytable" + "         order by _id desc", null);
+        Cursor cursor = db.rawQuery("select _id, title, content, date, imagepath from mytable" + "         order by _id desc", null);
         //결국 cursor 에 select한 값이 들어온다!!
         while (cursor.moveToNext()) {
             memoListDTO memo = new memoListDTO();
+            memo.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("_id"))));
             memo.setTitle(cursor.getString(cursor.getColumnIndex("title")));
             memo.setContent(cursor.getString(cursor.getColumnIndex("content")));
             memo.setDate(cursor.getString(cursor.getColumnIndex("date")));

@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // 테이블 생성하는 코드를 작성한다
         //onCreate() 함수는 앱 설치 후 최초 한 번만 호출되므로 수정한 부분이 반영이 되지는 않습니다.
 //       String memosql = "create table mytable "+"(_id integer primary key autoincrement," + "title"+ "content, "+ "date)";
-        String memosql = "create table mytable "+"(_id integer primary key autoincrement,"+" title,"+ "content, "+ "date, "+ "imagepath)";
+        String memosql = "create table mytable "+"(_id integer primary key autoincrement,"+" id,"+" title,"+ "content, "+ "date, "+ "imagepath)";
 
         db.execSQL(memosql);
     }

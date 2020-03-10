@@ -41,7 +41,7 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
     @BindView(R.id.btn_submit)
     Button btn_submit;
 
-    private String id;
+    private int id;
     private String title;
     private String content;
     private String date;
@@ -59,7 +59,7 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
         setContentView(R.layout.activity_memo_detail_list);
         ButterKnife.bind(this);
 
-        id = getIntent().getStringExtra("_id");
+        id = getIntent().getIntExtra("_id", 0);
         title = getIntent().getStringExtra("title");
         content = getIntent().getStringExtra("content");
         date = getIntent().getStringExtra("date");
