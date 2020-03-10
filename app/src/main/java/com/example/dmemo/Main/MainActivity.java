@@ -115,4 +115,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         Intent intent = new Intent(MainActivity.this, AddMemoActivity.class);
         startActivity(intent);
     }
+
+
+    @Override
+    public void onBackPressed() {
+        if (!adapter.getEditMode()) {
+            finish();
+        } else {
+            adapter.setEditMode(false);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 }

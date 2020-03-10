@@ -83,7 +83,7 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
         btn_submit.setVisibility(View.VISIBLE);
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("UPDATE mytable SET title = '" + et_detail_title.getText() + "', content = '" + et_detail_content.getText() + "', date = '" + date + "' where _id = '"+ id + "';");
+        db.execSQL("UPDATE mytable SET title = '" + et_detail_title.getText() + "', content = '" + et_detail_content.getText() + "', date = '" + date + "' where _id = '" + id + "';");
         db.close();
 
         Intent intent = new Intent(this, MainActivity.class);
@@ -135,4 +135,6 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
 
 
     }
+
+
 }

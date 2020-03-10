@@ -9,6 +9,23 @@
         android:background="#ffffff">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="7dp">
+
+        <CheckBox
+            android:id="@+id/cb_edit_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:button="@drawable/cb_edit_box"
+            android:visibility="gone"
+            android:gravity="center" />
+
+        <LinearLayout
             android:id="@+id/ll_memo_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,5 +61,6 @@
                 android:layout_marginRight="10dp" />
         </LinearLayout>
 
+        </LinearLayout>
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>
