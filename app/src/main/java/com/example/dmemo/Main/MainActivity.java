@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         db.close();
 
         if (memoList != null && memoList.size() > 0) {
-            tv_list_conut.setText(String.valueOf(memoList.size()));
+            tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) +"개");
             adapter = new MemoAdapter();
             adapter.setFeedList(memoList);
             adapter.setLongClickItemlistener(longClickListener);
