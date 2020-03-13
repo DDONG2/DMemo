@@ -49,7 +49,7 @@
                     android:id="@+id/rc_memo_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@android:color/white">
+                    android:background="@color/white_gray2">
 
                 </android.support.v7.widget.RecyclerView>
 
