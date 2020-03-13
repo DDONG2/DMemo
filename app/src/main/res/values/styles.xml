@@ -1,9 +1,21 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTitleSize">45dp</item>
     </style>
+
+
+    <style name="AppBaseTheme_gray" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/white_gray2</item>
+        <item name="colorAccent">@color/white_gray2</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/white_gray2</item>
+        <item name="android:windowContentOverlay">@color/white_gray2</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
 
 </resources>
