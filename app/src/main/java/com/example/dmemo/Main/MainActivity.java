@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -55,6 +56,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @BindView(R.id.btn_main_delete)
     Button btn_main_delete;
+
+    @BindView(R.id.cb_edit_selected_all)
+    CheckBox cb_edit_selected_all;
 
     /**
      * 애니메이션
@@ -133,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             // 오랫동안 눌렀을 때 이벤트가 발생됨
             Toast.makeText(getApplicationContext(),
                     "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
+            cb_edit_selected_all.setVisibility(View.VISIBLE);
             adapter.setEditMode(true);
             adapter.notifyDataSetChanged();
             ll_edit_select_bar.startAnimation(anim_down);
@@ -203,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             adapter.setEditMode(false);
             adapter.notifyDataSetChanged();
             ll_edit_select_bar.startAnimation(anim_up);
+            cb_edit_selected_all.setVisibility(View.GONE);
 
         }
     }
