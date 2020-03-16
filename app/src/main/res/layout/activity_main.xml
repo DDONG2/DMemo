@@ -55,7 +55,9 @@
                     android:layout_marginRight="12dp"
                     android:button="@drawable/cb_edit_box"
                     android:layout_gravity="center_vertical"
-                    android:visibility="gone" />
+                    android:text=" 전체"
+                    android:visibility="gone"
+                     />
 
                 <Button
                     android:id="@+id/btn_option1"

@@ -66,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private Animation anim_down;
     private Animation anim_up;
 
-    private  ArrayList<String> checkedIds = new ArrayList<>();
+    private ArrayList<String> checkedIds = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +92,19 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void initView() {
+        cb_edit_selected_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+             //       checkedIds.addAll()
+                } else {
+                    checkedIds.clear();
+                }
+
+
+            }
+        });
 
         memoList.clear();
         DBHelper helper = new DBHelper(this);
@@ -110,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         db.close();
 
         if (memoList != null && memoList.size() > 0) {
-            tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) +"개");
+            tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) + "개");
             adapter = new MemoAdapter();
             adapter.setFeedList(memoList);
             adapter.setLongClickItemlistener(longClickListener);
@@ -236,8 +249,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
 
 
-
-
     }
 
     private CompoundButton.OnCheckedChangeListener itemCheckListener = new CompoundButton.OnCheckedChangeListener() {
@@ -245,17 +256,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (buttonView.getTag().toString().indexOf(memoListDTO.class.getSimpleName()) > 0) {
                 memoListDTO memolist = (memoListDTO) buttonView.getTag();
-                    if (isChecked) {
-                        checkedIds.add(Integer.toString(memolist.getId()));
-                    } else {
-                        checkedIds.remove(Integer.toString(memolist.getId()));
-                    }
+                if (isChecked) {
+                    checkedIds.add(Integer.toString(memolist.getId()));
+                } else {
+                    checkedIds.remove(Integer.toString(memolist.getId()));
+                }
 
             }
 
         }
     };
-
 
 
 }
