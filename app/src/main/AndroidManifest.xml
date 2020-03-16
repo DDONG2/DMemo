@@ -21,13 +21,13 @@
         <activity
             android:name=".Memo.AddMemoActivity"
             android:label="AddMemo"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppBaseTheme_gray"
             android:screenOrientation="portrait" />
 
         <activity
             android:name=".Memo.MemoDetailActivity"
             android:label="AddMemo"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppBaseTheme_gray"
             android:screenOrientation="portrait" />
 
 
