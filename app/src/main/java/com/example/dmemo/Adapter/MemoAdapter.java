@@ -32,6 +32,8 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
     private boolean isEditMode = false;
 
+    private boolean isAllClick = false;
+
     private View.OnLongClickListener onLongClickListener;
 
     private CompoundButton.OnCheckedChangeListener checkItemlistener;
@@ -74,7 +76,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         holder.cb_edit_selected.setTag(memoListForCheckBox);
         holder.cb_edit_selected.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
         holder.cb_edit_selected.setOnCheckedChangeListener(checkItemlistener);
-
+        if (isEditMode){
+            holder.cb_edit_selected.setChecked(isAllClick ? true : false);
+        }
         holder.ll_memo_list.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -104,6 +108,16 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     public boolean getEditMode() {
         return isEditMode;
     }
+
+    public void setIsAllClick(boolean allClick) {
+        isAllClick = allClick;
+    }
+
+    public boolean getIsAllClick() {
+        return isAllClick;
+    }
+
+
 
     @Override
     public long getItemId(int position) {

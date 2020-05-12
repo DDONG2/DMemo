@@ -65,8 +65,20 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      */
     private Animation anim_down;
     private Animation anim_up;
+    /**
+     * 체크박스 낱개
+     */
+    private ArrayList<String> checkOne = new ArrayList<>();
 
-    private ArrayList<String> checkedIds = new ArrayList<>();
+    /**
+     * 체크박스 전체선택 리스트
+     */
+    private ArrayList<String> checkAll = new ArrayList<>();
+
+    /**
+     * 체크박스 전체선택 플래그 false 되는 시점은 전체선택후 1개만 체크 해제시 false 로 만든다.
+     */
+    private boolean isAllCheck = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void onResume() {
         super.onResume();
-        initView();
+       // initView();
     }
 
     @Override
@@ -98,11 +110,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
              //       checkedIds.addAll()
+                    adapter.setIsAllClick(true);
+                    adapter.notifyDataSetChanged();
+                    isAllCheck = true;
                 } else {
-                    checkedIds.clear();
+                    if(isAllCheck){
+                    adapter.setIsAllClick(false);
+                    adapter.notifyDataSetChanged();
+                    }
                 }
-
-
             }
         });
 
@@ -119,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             memo.setDate(cursor.getString(cursor.getColumnIndex("date")));
             //memo.setImagePath(cursor.getString(cursor.getColumnIndex("imagepath")));
             memoList.add(memo);
+            checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
         }
         db.close();
 
@@ -143,7 +160,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             tv_list_conut.setText("0");
         }
     }
-
+    /**
+     * 롱클릭 리스너
+     */
     private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -172,11 +191,21 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void onClicksubmit() {
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
-        for (int i = 0; i < checkedIds.size(); i++) {
-            String sql = "delete from  mytable where _id = '" + checkedIds.get(i) + "'";
-            db.execSQL(sql);
+
+        if(cb_edit_selected_all.isChecked()) { //전체선택이 되어있을땐 모든 데이터를 지운다.
+            for (int i = 0; i < checkAll.size(); i++) {
+                String sql = "delete from  mytable where _id = '" + checkAll.get(i) + "'";
+                db.execSQL(sql);
+            }
+        }else{
+            for (int i = 0; i < checkOne.size(); i++) {  //전체선택이 아닐경우 선택된 데이터만 지운다.
+                String sql = "delete from  mytable where _id = '" + checkOne.get(i) + "'";
+                db.execSQL(sql);
+            }
         }
-        checkedIds.clear();
+        cb_edit_selected_all.setVisibility(View.GONE);
+        checkAll.clear();
+        checkOne.clear();
         initView();
         ll_edit_select_bar.startAnimation(anim_up);
     }
@@ -250,20 +279,26 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 
     }
-
+    /**
+     * 리스트 체크박스 리스너
+     */
     private CompoundButton.OnCheckedChangeListener itemCheckListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (buttonView.getTag().toString().indexOf(memoListDTO.class.getSimpleName()) > 0) {
                 memoListDTO memolist = (memoListDTO) buttonView.getTag();
                 if (isChecked) {
-                    checkedIds.add(Integer.toString(memolist.getId()));
+                    checkOne.add(Integer.toString(memolist.getId()));
+                    if(checkOne.size() > 0 && checkOne.size() == checkAll.size()){
+                       cb_edit_selected_all.setChecked(true);
+                    }
                 } else {
-                    checkedIds.remove(Integer.toString(memolist.getId()));
+                    checkOne.remove(Integer.toString(memolist.getId()));
+                    isAllCheck = false;
+                    cb_edit_selected_all.setChecked(false);
+
                 }
-
             }
-
         }
     };
 
