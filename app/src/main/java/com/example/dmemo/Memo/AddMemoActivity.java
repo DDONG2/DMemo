@@ -37,8 +37,8 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
     @BindView(R.id.et_content)
     EditText et_content;
 
-    @BindView(R.id.btn_submit)
-    Button btn_submit;
+    @BindView(R.id.btn_add_memo_submit)
+    Button btn_add_memo_submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
 
     }
 
-    @OnClick(R.id.btn_submit)
+    @OnClick(R.id.btn_add_memo_submit)
     @Override
     public void onClickSave() {
 
@@ -88,6 +88,10 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
         db.execSQL("insert into mytable (title, content, date) values (?,?,?)",
                 new String[]{title, content, date});
         db.close();
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE); // 키보드 숨기기
+        imm.hideSoftInputFromWindow(et_title.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(et_content.getWindowToken(), 0);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);      //이렇게 하면 앱 테스크를 모두 지울 수 있다. (원래는 Activity 가 스택에 쌓이는데 그걸 클리어해준다!)
