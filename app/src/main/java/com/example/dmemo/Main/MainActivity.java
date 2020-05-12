@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 if (isChecked) {
                     adapter.setIsAllClick(true);
                     adapter.notifyDataSetChanged();
+                    isAllCheck = true;
                 } else {
                     if (isAllCheck) {
                         adapter.setIsAllClick(false);
@@ -221,7 +222,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 if (isChecked) {
                     checkOne.add(Integer.toString(memolist.getId()));
                     if (checkOne.size() > 0 && checkOne.size() == checkAll.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
-                        isAllCheck = true;
                         cb_edit_selected_all.setChecked(true);
                     }
                 } else {
