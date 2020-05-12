@@ -30,14 +30,26 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
     private ArrayList<memoListDTO> feedList = new ArrayList<>();
 
+    /**
+     * 롱클릭 후 수정 모드 여부
+     */
     private boolean isEditMode = false;
 
+    /**
+     * 메인 에서 전체 선택 여부
+     */
     private boolean isAllClick = false;
-
+    /**
+     * 롱클릭 리스너
+     */
     private View.OnLongClickListener onLongClickListener;
-
+    /**
+     * 낱개 선택 리스너
+     */
     private CompoundButton.OnCheckedChangeListener checkItemlistener;
-
+    /**
+     * 리스트 아이템 판별을 위한 DTO (_id)
+     */
     private memoListDTO memoListForCheckBox;
 
     public void setFeedList(ArrayList<memoListDTO> feedList) {
@@ -101,23 +113,21 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
     }
 
-    public void setEditMode(boolean editMode) {
-        isEditMode = editMode;
-    }
-
     public boolean getEditMode() {
         return isEditMode;
     }
 
-    public void setIsAllClick(boolean allClick) {
-        isAllClick = allClick;
+    public void setEditMode(boolean editMode) {
+        isEditMode = editMode;
     }
 
     public boolean getIsAllClick() {
         return isAllClick;
     }
 
-
+    public void setIsAllClick(boolean allClick) {
+        isAllClick = allClick;
+    }
 
     @Override
     public long getItemId(int position) {

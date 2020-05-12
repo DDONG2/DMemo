@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void onResume() {
         super.onResume();
-       // initView();
     }
 
     @Override
@@ -109,14 +108,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-             //       checkedIds.addAll()
                     adapter.setIsAllClick(true);
                     adapter.notifyDataSetChanged();
-                    isAllCheck = true;
                 } else {
-                    if(isAllCheck){
-                    adapter.setIsAllClick(false);
-                    adapter.notifyDataSetChanged();
+                    if (isAllCheck) {
+                        adapter.setIsAllClick(false);
+                        adapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -160,64 +157,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             tv_list_conut.setText("0");
         }
     }
+
     /**
-     * 롱클릭 리스너
+     * 애니메이션 효과 설정 메소드
      */
-    private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            // 오랫동안 눌렀을 때 이벤트가 발생됨
-            Toast.makeText(getApplicationContext(),
-                    "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
-            cb_edit_selected_all.setVisibility(View.VISIBLE);
-            adapter.setEditMode(true);
-            adapter.notifyDataSetChanged();
-            ll_edit_select_bar.startAnimation(anim_down);
-            // 리턴값이 있다
-            // 이메서드에서 이벤트에대한 처리를 끝냈음
-            //    그래서 다른데서는 처리할 필요없음 true
-            // 여기서 이벤트 처리를 못했을 경우는 false
-            return true;
-        }
-    };
-
-    @Override
-    public void onClickClose() {
-
-    }
-
-
-    @OnClick(R.id.btn_main_delete)
-    public void onClicksubmit() {
-        DBHelper helper = new DBHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        if(cb_edit_selected_all.isChecked()) { //전체선택이 되어있을땐 모든 데이터를 지운다.
-            for (int i = 0; i < checkAll.size(); i++) {
-                String sql = "delete from  mytable where _id = '" + checkAll.get(i) + "'";
-                db.execSQL(sql);
-            }
-        }else{
-            for (int i = 0; i < checkOne.size(); i++) {  //전체선택이 아닐경우 선택된 데이터만 지운다.
-                String sql = "delete from  mytable where _id = '" + checkOne.get(i) + "'";
-                db.execSQL(sql);
-            }
-        }
-        cb_edit_selected_all.setVisibility(View.GONE);
-        checkAll.clear();
-        checkOne.clear();
-        initView();
-        ll_edit_select_bar.startAnimation(anim_up);
-    }
-
-
-    @OnClick(R.id.btn_add_memo)
-    @Override
-    public void onClickAddMemo() {
-        Intent intent = new Intent(MainActivity.this, AddMemoActivity.class);
-        startActivity(intent);
-    }
-
     public void initAnimationView() {
 
         anim_up = AnimationUtils.loadAnimation(this, R.anim.push_up);
@@ -240,19 +183,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!adapter.getEditMode()) {
-            finish();
-        } else {
-            adapter.setEditMode(false);
-            adapter.notifyDataSetChanged();
-            ll_edit_select_bar.startAnimation(anim_up);
-            cb_edit_selected_all.setVisibility(View.GONE);
-
-        }
     }
 
     /**
@@ -279,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 
     }
+
     /**
      * 리스트 체크박스 리스너
      */
@@ -289,18 +220,100 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 memoListDTO memolist = (memoListDTO) buttonView.getTag();
                 if (isChecked) {
                     checkOne.add(Integer.toString(memolist.getId()));
-                    if(checkOne.size() > 0 && checkOne.size() == checkAll.size()){
-                       cb_edit_selected_all.setChecked(true);
+                    if (checkOne.size() > 0 && checkOne.size() == checkAll.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
+                        isAllCheck = true;
+                        cb_edit_selected_all.setChecked(true);
                     }
                 } else {
                     checkOne.remove(Integer.toString(memolist.getId()));
-                    isAllCheck = false;
+                    isAllCheck = false;                                     // 낱개가 하나라도 없어질경우 전체선택이 아님으로 전체선택 플래그를 false로 만든다.
                     cb_edit_selected_all.setChecked(false);
 
                 }
             }
         }
     };
+
+    /**
+     * 롱클릭 리스너
+     */
+    private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            // 오랫동안 눌렀을 때 이벤트가 발생됨
+            Toast.makeText(getApplicationContext(),
+                    "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
+            cb_edit_selected_all.setVisibility(View.VISIBLE);
+            adapter.setEditMode(true);
+            adapter.notifyDataSetChanged();
+            ll_edit_select_bar.startAnimation(anim_down);
+            // 리턴값이 있다
+            // 이메서드에서 이벤트에대한 처리를 끝냈음
+            //    그래서 다른데서는 처리할 필요없음 true
+            // 여기서 이벤트 처리를 못했을 경우는 false
+            return true;
+        }
+    };
+
+
+    /**
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 클릭 이벤트* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     */
+
+
+    @Override
+    public void onClickClose() {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!adapter.getEditMode()) {
+            finish();
+        } else {
+            adapter.setEditMode(false);
+            adapter.notifyDataSetChanged();
+            ll_edit_select_bar.startAnimation(anim_up);
+            cb_edit_selected_all.setVisibility(View.GONE);
+
+        }
+    }
+
+    /**
+     * 삭제버튼
+     */
+    @OnClick(R.id.btn_main_delete)
+    public void onClicksubmit() {
+        DBHelper helper = new DBHelper(this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        if (cb_edit_selected_all.isChecked()) { //전체선택이 되어있을땐 모든 데이터를 지운다.
+            for (int i = 0; i < checkAll.size(); i++) {
+                String sql = "delete from  mytable where _id = '" + checkAll.get(i) + "'";
+                db.execSQL(sql);
+            }
+        } else {
+            for (int i = 0; i < checkOne.size(); i++) {  //전체선택이 아닐경우 선택된 데이터만 지운다.
+                String sql = "delete from  mytable where _id = '" + checkOne.get(i) + "'";
+                db.execSQL(sql);
+            }
+        }
+        cb_edit_selected_all.setVisibility(View.GONE);
+        checkAll.clear();
+        checkOne.clear();
+        initView();
+        ll_edit_select_bar.startAnimation(anim_up);
+    }
+
+    /**
+     * 메모추가 버튼
+     */
+    @OnClick(R.id.btn_add_memo)
+    @Override
+    public void onClickAddMemo() {
+        Intent intent = new Intent(MainActivity.this, AddMemoActivity.class);
+        startActivity(intent);
+    }
 
 
 }
