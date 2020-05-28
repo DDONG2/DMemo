@@ -1,4 +1,4 @@
-package com.example.dmemo.Main;
+package com.example.dmemo.View.Main;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,13 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.dmemo.Adapter.MemoAdapter;
-import com.example.dmemo.Memo.AddMemoActivity;
+import com.example.dmemo.View.Memo.AddMemoActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.Utils.DBHelper;
 import com.example.dmemo.dateDTO.memoListDTO;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -119,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 }
             }
         });
- 
+
         memoList.clear();
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -136,10 +135,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
         }
         db.close();
-
+        adapter = new MemoAdapter();
         if (memoList != null && memoList.size() > 0) {
             tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) + "개");
-            adapter = new MemoAdapter();
             adapter.setFeedList(memoList);
             adapter.setLongClickItemlistener(longClickListener);
             adapter.setCheckItemlistener(itemCheckListener);

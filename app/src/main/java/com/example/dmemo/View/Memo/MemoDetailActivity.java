@@ -1,4 +1,4 @@
-package com.example.dmemo.Memo;
+package com.example.dmemo.View.Memo;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.example.dmemo.Main.MainActivity;
+import com.example.dmemo.View.Main.MainActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.Utils.DBHelper;
 

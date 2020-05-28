@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppBaseTheme_gray">
-        <activity android:name=".Main.MainActivity">
+        <activity android:name=".View.Main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,13 +19,13 @@
 
 
         <activity
-            android:name=".Memo.AddMemoActivity"
+            android:name=".View.Memo.AddMemoActivity"
             android:label="AddMemo"
             android:theme="@style/AppBaseTheme_gray"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".Memo.MemoDetailActivity"
+            android:name=".View.Memo.MemoDetailActivity"
             android:label="AddMemo"
             android:theme="@style/AppBaseTheme_gray"
             android:screenOrientation="portrait" />

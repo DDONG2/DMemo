@@ -1,4 +1,4 @@
-package com.example.dmemo.Memo;
+package com.example.dmemo.View.Memo;
 
 import com.example.dmemo.BasePresenter;
 import com.example.dmemo.BaseView;

@@ -8,14 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.dmemo.Main.MainActivity;
-import com.example.dmemo.Memo.MemoDetailActivity;
+import com.example.dmemo.View.Memo.MemoDetailActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.dateDTO.memoListDTO;
 
