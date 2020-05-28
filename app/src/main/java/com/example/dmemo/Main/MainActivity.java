@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 }
             }
         });
-
+ 
         memoList.clear();
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
