@@ -78,15 +78,51 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      * 체크박스 전체선택 플래그 false 되는 시점은 전체선택후 1개만 체크 해제시 false 로 만든다.
      */
     private boolean isAllCheck = true;
+    /**
+     * 메인 프레젠터
+     */
+    private MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ButterKnife.bind(this);
+
+        presenter = new MainPresenter(this);
+        presenter.onStartPresenter();
+
+// ★제이슨 연습용★
+//        String a = "{\"ret_code\":\"1000\",\"ret_msg\":\"처리 결과 응답 메시지\"" +
+//                ",\"data\":{\"noti_seq\":\"1\",\"noti_title\":\"공지사항 제목\",\"ver\":\"1000\",\"ctn_count\":2,\"service_count\":2" +
+//                ",\"ctn\":[{\"ctn\":\"01012345678\",\"nick_name\":\"TestOneName\",\"url\":\"\",\"pic_default\":\"0\",\"list_count\":0}" +
+//                ",{\"ctn\":\"10대\",\"seq\":\"1\",\"url\":\"남자\",\"pic_default\":\"심플\",\"list_count\":0}" +
+//                ",{\"ctn\":\"20대\",\"seq\":\"2\",\"url\":\"남자\",\"pic_default\":\"모던\",\"list_count\":0}" +
+//                ",{\"ctn\":\"20대\",\"seq\":\"3\",\"url\":\"여자\",\"pic_default\":\"유니크\",\"list_count\":0}" +
+//                ",{\"ctn\":\"30대\",\"seq\":\"4\",\"url\":\"여자\",\"pic_default\":\"유니크\",\"list_count\":0}" +
+//                ",{\"ctn\":\"10대\",\"seq\":\"5\",\"url\":\"남자\",\"pic_default\":\"모던\",\"list_count\":0}" +
+//                ",{\"ctn\":\"20대\",\"seq\":\"6\",\"url\":\"여자\",\"pic_default\":\"유니크\",\"list_count\":0}" +
+//                ",{\"ctn\":\"10대\",\"seq\":\"7\",\"url\":\"여자\",\"pic_default\":\"심플\",\"list_count\":0}" +
+//                ",{\"ctn\":\"40대\",\"seq\":\"8\",\"url\":\"여자\",\"pic_default\":\"유니크\",\"list_count\":0}" +
+//                ",{\"ctn\":\"10대\",\"seq\":\"9\",\"url\":\"여자\",\"pic_default\":\"모던\",\"list_count\":0}" +
+//                ",{\"ctn\":\"30대\",\"seq\":\"10\",\"url\":\"여자\",\"pic_default\":\"0\",\"list_count\":0}" +
+//                ",{\"ctn\":\"20대\",\"seq\":\"11\",\"url\":\"여자\",\"pic_default\":\"유니크\",\"list_count\":0}" +
+//                ",{\"ctn\":\"10대\",\"seq\":\"12\",\"url\":\"여자\",\"pic_default\":\"심플\",\"list_count\":0}" +
+//                ",{\"ctn\":\"20대\",\"seq\":\"13\",\"url\":\"여자\",\"pic_default\":\"심플\",\"list_count\":0}]}" +
+//                ",\"token\":\"\"}";
+//        ArrayList<String> permissionList = new ArrayList<String>();
+
+
+
+
+
 
         initAnimationView();
         initView();
+
+
+
 
     }
 
@@ -120,21 +156,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         });
 
         memoList.clear();
-        DBHelper helper = new DBHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor cursor = db.rawQuery("select _id, title, content, date, imagepath from mytable" + "         order by _id desc", null);
-        //결국 cursor 에 select한 값이 들어온다!!
-        while (cursor.moveToNext()) {
-            memoListDTO memo = new memoListDTO();
-            memo.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("_id"))));
-            memo.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-            memo.setContent(cursor.getString(cursor.getColumnIndex("content")));
-            memo.setDate(cursor.getString(cursor.getColumnIndex("date")));
-            //memo.setImagePath(cursor.getString(cursor.getColumnIndex("imagepath")));
-            memoList.add(memo);
-            checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
-        }
-        db.close();
+        memoList = presenter.callMainInfoDATA();
+//        DBHelper helper = new DBHelper(this);
+//        SQLiteDatabase db = helper.getWritableDatabase();
+//        Cursor cursor = db.rawQuery("select _id, title, content, date, imagepath from mytable" + "         order by _id desc", null);
+//        //결국 cursor 에 select한 값이 들어온다!!
+//        while (cursor.moveToNext()) {
+//            memoListDTO memo = new memoListDTO();
+//            memo.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("_id"))));
+//            memo.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+//            memo.setContent(cursor.getString(cursor.getColumnIndex("content")));
+//            memo.setDate(cursor.getString(cursor.getColumnIndex("date")));
+//            //memo.setImagePath(cursor.getString(cursor.getColumnIndex("imagepath")));
+//            memoList.add(memo);
+//     //       checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
+//        }
+       // db.close();
         adapter = new MemoAdapter();
         if (memoList != null && memoList.size() > 0) {
             tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) + "개");
@@ -219,7 +256,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 memoListDTO memolist = (memoListDTO) buttonView.getTag();
                 if (isChecked) {
                     checkOne.add(Integer.toString(memolist.getId()));
-                    if (checkOne.size() > 0 && checkOne.size() == checkAll.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
+                    if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
                         cb_edit_selected_all.setChecked(true);
                     }
                 } else {
@@ -286,8 +323,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         SQLiteDatabase db = helper.getWritableDatabase();
 
         if (cb_edit_selected_all.isChecked()) { //전체선택이 되어있을땐 모든 데이터를 지운다.
-            for (int i = 0; i < checkAll.size(); i++) {
-                String sql = "delete from  mytable where _id = '" + checkAll.get(i) + "'";
+            for (int i = 0; i < memoList.size(); i++) {
+                String sql = "delete from  mytable where _id = '" + memoList.get(i) + "'";
                 db.execSQL(sql);
             }
         } else {
@@ -297,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             }
         }
         cb_edit_selected_all.setVisibility(View.GONE);
-        checkAll.clear();
+//        checkAll.clear();
         checkOne.clear();
         initView();
         ll_edit_select_bar.startAnimation(anim_up);

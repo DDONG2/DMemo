@@ -2,6 +2,9 @@ package com.example.dmemo.View.Main;
 
 import com.example.dmemo.BasePresenter;
 import com.example.dmemo.BaseView;
+import com.example.dmemo.dateDTO.memoListDTO;
+
+import java.util.ArrayList;
 
 public interface MainContract {
     interface View extends BaseView {
@@ -16,7 +19,7 @@ public interface MainContract {
 
     interface Presenter extends BasePresenter {
 
-        //void callMainInfoAPI(String cityCd, String langSelCd);
+        ArrayList<memoListDTO> callMainInfoDATA();
 
 
     }
