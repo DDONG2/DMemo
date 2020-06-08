@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         if (cb_edit_selected_all.isChecked()) { //전체선택이 되어있을땐 모든 데이터를 지운다.
             for (int i = 0; i < memoList.size(); i++) {
-                String sql = "delete from  mytable where _id = '" + memoList.get(i) + "'";
+                String sql = "delete from  mytable where _id = '" + memoList.get(i).getId() + "'";
                 db.execSQL(sql);
             }
         } else {
