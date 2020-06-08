@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -144,12 +145,26 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     adapter.setIsAllClick(true);
-                    adapter.notifyDataSetChanged();
+
+                    Handler handler = new Handler();
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    }; handler.post(r);
+
+
+                    //adapter.notifyDataSetChanged();
                     isAllCheck = true;
                 } else {
                     if (isAllCheck) {
                         adapter.setIsAllClick(false);
-                        adapter.notifyDataSetChanged();
+                        Handler handler = new Handler();
+                        final Runnable r = new Runnable() {
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        }; handler.post(r);
                     }
                 }
             }
@@ -306,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         if (!adapter.getEditMode()) {
             finish();
         } else {
+            adapter.setIsAllClick(false);
             adapter.setEditMode(false);
             adapter.notifyDataSetChanged();
             ll_edit_select_bar.startAnimation(anim_up);
