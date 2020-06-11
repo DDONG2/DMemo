@@ -24,6 +24,7 @@ import com.example.dmemo.View.Memo.AddMemoActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.Utils.DBHelper;
 import com.example.dmemo.dateDTO.memoListDTO;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -75,6 +76,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      */
     private ArrayList<String> checkAll = new ArrayList<>();
 
+//    private ArrayList<GsonDTO.Price> priceList = new ArrayList<GsonDTO.Price>();
+
+//    private ArrayList<GsonDTO.Price> selectPriceList = new ArrayList<GsonDTO.Price>();
+
     /**
      * 체크박스 전체선택 플래그 전체선택 이면 true 아니면 false.
      */
@@ -98,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 // ★제이슨 연습용★
 //        String a = "{\"ret_code\":\"1000\",\"ret_msg\":\"처리 결과 응답 메시지\"" +
 //                ",\"data\":{\"noti_seq\":\"1\",\"noti_title\":\"공지사항 제목\",\"ver\":\"1000\",\"ctn_count\":2,\"service_count\":2" +
-//                ",\"ctn\":[{\"ctn\":\"01012345678\",\"nick_name\":\"TestOneName\",\"url\":\"\",\"pic_default\":\"0\",\"list_count\":0}" +
+//                ",\"price\":[{\"ctn\":\"20대\",\"seq\":\"2\",\"url\":\"여자\",\"pic_default\":\"심플\",\"list_count\":0}" +
 //                ",{\"ctn\":\"10대\",\"seq\":\"1\",\"url\":\"남자\",\"pic_default\":\"심플\",\"list_count\":0}" +
 //                ",{\"ctn\":\"20대\",\"seq\":\"2\",\"url\":\"남자\",\"pic_default\":\"모던\",\"list_count\":0}" +
 //                ",{\"ctn\":\"20대\",\"seq\":\"3\",\"url\":\"여자\",\"pic_default\":\"유니크\",\"list_count\":0}" +
@@ -113,13 +118,163 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //                ",{\"ctn\":\"10대\",\"seq\":\"12\",\"url\":\"여자\",\"pic_default\":\"심플\",\"list_count\":0}" +
 //                ",{\"ctn\":\"20대\",\"seq\":\"13\",\"url\":\"여자\",\"pic_default\":\"심플\",\"list_count\":0}]}" +
 //                ",\"token\":\"\"}";
-//        ArrayList<String> permissionList = new ArrayList<String>();
+//        Gson gson = new Gson();
+//        final GsonDTO price = gson.fromJson(a, GsonDTO.class);
+//
+//        for(int i= 0; i < price.getData().getPrice().size(); i++){
+//            priceList.add(price.getData().getPrice().get(i));
+//        }
+//
+//        for(int i= 0; i < priceList.size(); i++){
+//            if(priceList.get(i).getCtn().equalsIgnoreCase("10대"))
+//            {
+//                selectPriceList.add(priceList.get(i));
+//            }
+//        }
+
 
 
         initAnimationView();
         initView();
 
     }
+
+
+//    public class GsonDTO {
+//        String ret_code;
+//        String ret_msg;
+//        Data data;
+//
+//        public String getRet_code() {
+//            return ret_code;
+//        }
+//
+//        public void setRet_code(String ret_code) {
+//            this.ret_code = ret_code;
+//        }
+//
+//        public String getRet_msg() {
+//            return ret_msg;
+//        }
+//
+//        public void setRet_msg(String ret_msg) {
+//            this.ret_msg = ret_msg;
+//        }
+//
+//        public Data getData() {
+//            return data;
+//        }
+//
+//        public void setData(Data data) {
+//            this.data = data;
+//        }
+//
+//        public class Data {
+//            String noti_seq;
+//            String noti_title;
+//            String ver;
+//            String ctn_count;
+//            String service_count;
+//            ArrayList<Price> price;
+//
+//            public String getNoti_seq() {
+//                return noti_seq;
+//            }
+//
+//            public void setNoti_seq(String noti_seq) {
+//                this.noti_seq = noti_seq;
+//            }
+//
+//            public String getNoti_title() {
+//                return noti_title;
+//            }
+//
+//            public void setNoti_title(String noti_title) {
+//                this.noti_title = noti_title;
+//            }
+//
+//            public String getVer() {
+//                return ver;
+//            }
+//
+//            public void setVer(String ver) {
+//                this.ver = ver;
+//            }
+//
+//            public String getCtn_count() {
+//                return ctn_count;
+//            }
+//
+//            public void setCtn_count(String ctn_count) {
+//                this.ctn_count = ctn_count;
+//            }
+//
+//            public String getService_count() {
+//                return service_count;
+//            }
+//
+//            public void setService_count(String service_count) {
+//                this.service_count = service_count;
+//            }
+//
+//            public ArrayList<Price> getPrice() {
+//                return price;
+//            }
+//
+//            public void setPrice(ArrayList<Price> price) {
+//                this.price = price;
+//            }
+//        }
+//
+//        public class Price {
+//            String ctn;
+//            String seq;
+//            String url;
+//            String pic_default;
+//            int list_count;
+//
+//            public String getCtn() {
+//                return ctn;
+//            }
+//
+//            public void setCtn(String ctn) {
+//                this.ctn = ctn;
+//            }
+//
+//            public String getSeq() {
+//                return seq;
+//            }
+//
+//            public void setSeq(String seq) {
+//                this.seq = seq;
+//            }
+//
+//            public String getUrl() {
+//                return url;
+//            }
+//
+//            public void setUrl(String url) {
+//                this.url = url;
+//            }
+//
+//            public String getPic_default() {
+//                return pic_default;
+//            }
+//
+//            public void setPic_default(String pic_default) {
+//                this.pic_default = pic_default;
+//            }
+//
+//            public int getList_count() {
+//                return list_count;
+//            }
+//
+//            public void setList_count(int list_count) {
+//                this.list_count = list_count;
+//            }
+//        }
+//
+//    }
 
     @Override
     public void onResume() {
@@ -149,7 +304,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         public void run() {
                             adapter.notifyDataSetChanged();
                         }
-                    }; handler.post(r);
+                    };
+                    handler.post(r);
 
 
                     //adapter.notifyDataSetChanged();
@@ -157,12 +313,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                     isFirstCheck = false;
                     checkOne.clear();
                     adapter.setIsAllClick(false);
-                        Handler handler = new Handler();
-                        final Runnable r = new Runnable() {
-                            public void run() {
-                                adapter.notifyDataSetChanged();
-                            }
-                        }; handler.post(r);
+                    Handler handler = new Handler();
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                        }
+                    };
+                    handler.post(r);
                 }
             }
         });
@@ -253,7 +410,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             if (buttonView.getTag().toString().indexOf(memoListDTO.class.getSimpleName()) > 0) {
                 memoListDTO memolist = (memoListDTO) buttonView.getTag();
                 if (isChecked) {
-                    if(!isFirstCheck) {  // 전체선택이 아닌 낱개선택일시에만 checkOne 에 add 해준다.
+                    if (!isFirstCheck) {  // 전체선택이 아닌 낱개선택일시에만 checkOne 에 add 해준다.
                         checkOne.add(Integer.toString(memolist.getId()));
                     }
                     if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
