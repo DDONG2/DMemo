@@ -76,11 +76,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private ArrayList<String> checkAll = new ArrayList<>();
 
     /**
-     * 체크박스 전체선택 플래그 false 되는 시점은 전체선택후 1개만 체크 해제시 false 로 만든다.
+     * 체크박스 전체선택 플래그 전체선택 이면 true 아니면 false.
      */
-    private boolean isAllCheck = true;
-
-    private boolean isFirstCheck = true;
+    private boolean isFirstCheck = false;
 
     /**
      * 메인 프레젠터
@@ -118,15 +116,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //        ArrayList<String> permissionList = new ArrayList<String>();
 
 
-
-
-
-
         initAnimationView();
         initView();
-
-
-
 
     }
 
@@ -176,11 +167,15 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         cb_edit_selected_all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isFirstCheck) {
-                    isFirstCheck = false;
+                if (cb_edit_selected_all.isChecked()) {
+                    isFirstCheck = true;
+                    checkOne.clear();
+                    for (int i = 0; i < memoList.size(); i++) { // 전체선택일경우 checkOne 클리어 후 모든 리스트를 add 해준다. (* 리사이클러뷰 뷰홀더 이슈 그려지지 않은 리스트는 갱신이 되지 않음, 데이터리스트에 들어오지 않음)
+                        checkOne.add(Integer.toString(memoList.get(i).getId()));
+                    }
                     adapter.setIsAllClick(true);
                     Handler handler = new Handler();
-                    final Runnable r = new Runnable() {
+                    final Runnable r = new Runnable() {  // 쓰레드 post 를 해준 이유는 리사이클러뷰 UI 쓰레드 이슈 떄문
                         public void run() {
                             adapter.notifyDataSetChanged();
                         }
@@ -189,8 +184,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
                     //adapter.notifyDataSetChanged();
                 } else {
-                    isFirstCheck = true;
-                        adapter.setIsAllClick(false);
+                    isFirstCheck = false;
+                    checkOne.clear();
+                    adapter.setIsAllClick(false);
                         Handler handler = new Handler();
                         final Runnable r = new Runnable() {
                             public void run() {
@@ -301,15 +297,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             if (buttonView.getTag().toString().indexOf(memoListDTO.class.getSimpleName()) > 0) {
                 memoListDTO memolist = (memoListDTO) buttonView.getTag();
                 if (isChecked) {
-                    checkOne.add(Integer.toString(memolist.getId()));
+                    if(!isFirstCheck) {  // 전체선택이 아닌 낱개선택일시에만 checkOne 에 add 해준다.
+                        checkOne.add(Integer.toString(memolist.getId()));
+                    }
                     if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
-                        isFirstCheck = false;
                         cb_edit_selected_all.setChecked(true);
+                        isFirstCheck = true;
                     }
                 } else {
                     checkOne.remove(Integer.toString(memolist.getId()));
-                                                     // 낱개가 하나라도 없어질경우 전체선택이 아님으로 전체선택 플래그를 false로 만든다.
-                    isFirstCheck = true;
+                    isFirstCheck = false;                       // 낱개가 하나라도 없어질경우 전체선택이 아님으로 전체선택 플래그를 false로 만든다.
                     cb_edit_selected_all.setChecked(false);
 
                 }
