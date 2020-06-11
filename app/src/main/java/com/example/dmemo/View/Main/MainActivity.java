@@ -133,36 +133,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void initView() {
-//        cb_edit_selected_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                    adapter.setIsAllClick(true);
-//
-//                    Handler handler = new Handler();
-//                    final Runnable r = new Runnable() {
-//                        public void run() {
-//                            adapter.notifyDataSetChanged();
-//                        }
-//                    }; handler.post(r);
-//
-//
-//                    //adapter.notifyDataSetChanged();
-//                    isAllCheck = true;
-//                } else {
-//                    if (isAllCheck) {
-//                        adapter.setIsAllClick(false);
-//                        Handler handler = new Handler();
-//                        final Runnable r = new Runnable() {
-//                            public void run() {
-//                                adapter.notifyDataSetChanged();
-//                            }
-//                        }; handler.post(r);
-//                    }
-//                }
-//            }
-//        });
 
         cb_edit_selected_all.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,21 +169,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         memoList.clear();
         memoList = presenter.callMainInfoDATA();
-//        DBHelper helper = new DBHelper(this);
-//        SQLiteDatabase db = helper.getWritableDatabase();
-//        Cursor cursor = db.rawQuery("select _id, title, content, date, imagepath from mytable" + "         order by _id desc", null);
-//        //결국 cursor 에 select한 값이 들어온다!!
-//        while (cursor.moveToNext()) {
-//            memoListDTO memo = new memoListDTO();
-//            memo.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("_id"))));
-//            memo.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-//            memo.setContent(cursor.getString(cursor.getColumnIndex("content")));
-//            memo.setDate(cursor.getString(cursor.getColumnIndex("date")));
-//            //memo.setImagePath(cursor.getString(cursor.getColumnIndex("imagepath")));
-//            memoList.add(memo);
-//     //       checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
-//        }
-       // db.close();
+
         adapter = new MemoAdapter();
         if (memoList != null && memoList.size() > 0) {
             tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) + "개");
