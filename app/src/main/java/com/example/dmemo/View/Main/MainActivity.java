@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      * 체크박스 전체선택 플래그 false 되는 시점은 전체선택후 1개만 체크 해제시 false 로 만든다.
      */
     private boolean isAllCheck = true;
+
+    private boolean isFirstCheck = true;
+
     /**
      * 메인 프레젠터
      */
@@ -139,13 +142,43 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void initView() {
-        cb_edit_selected_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//        cb_edit_selected_all.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (isChecked) {
+//                    adapter.setIsAllClick(true);
+//
+//                    Handler handler = new Handler();
+//                    final Runnable r = new Runnable() {
+//                        public void run() {
+//                            adapter.notifyDataSetChanged();
+//                        }
+//                    }; handler.post(r);
+//
+//
+//                    //adapter.notifyDataSetChanged();
+//                    isAllCheck = true;
+//                } else {
+//                    if (isAllCheck) {
+//                        adapter.setIsAllClick(false);
+//                        Handler handler = new Handler();
+//                        final Runnable r = new Runnable() {
+//                            public void run() {
+//                                adapter.notifyDataSetChanged();
+//                            }
+//                        }; handler.post(r);
+//                    }
+//                }
+//            }
+//        });
 
+        cb_edit_selected_all.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View v) {
+                if (isFirstCheck) {
+                    isFirstCheck = false;
                     adapter.setIsAllClick(true);
-
                     Handler handler = new Handler();
                     final Runnable r = new Runnable() {
                         public void run() {
@@ -155,9 +188,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 
                     //adapter.notifyDataSetChanged();
-                    isAllCheck = true;
                 } else {
-                    if (isAllCheck) {
+                    isFirstCheck = true;
                         adapter.setIsAllClick(false);
                         Handler handler = new Handler();
                         final Runnable r = new Runnable() {
@@ -165,7 +197,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                                 adapter.notifyDataSetChanged();
                             }
                         }; handler.post(r);
-                    }
                 }
             }
         });
@@ -272,11 +303,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 if (isChecked) {
                     checkOne.add(Integer.toString(memolist.getId()));
                     if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
+                        isFirstCheck = false;
                         cb_edit_selected_all.setChecked(true);
                     }
                 } else {
                     checkOne.remove(Integer.toString(memolist.getId()));
-                    isAllCheck = false;                                     // 낱개가 하나라도 없어질경우 전체선택이 아님으로 전체선택 플래그를 false로 만든다.
+                                                     // 낱개가 하나라도 없어질경우 전체선택이 아님으로 전체선택 플래그를 false로 만든다.
+                    isFirstCheck = true;
                     cb_edit_selected_all.setChecked(false);
 
                 }
