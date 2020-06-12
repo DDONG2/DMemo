@@ -81,6 +81,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         memoListForCheckBox = feedList.get(position);
 
         holder.tv_title.setText(item.getTitle());
+        holder.tv_contents.setText(item.getContent());
         holder.tv_date.setText(item.getDate());
         holder.cb_edit_selected.setTag(memoListForCheckBox);
         holder.cb_edit_selected.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
@@ -141,6 +142,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
         @BindView(R.id.tv_title)
         TextView tv_title;
+
+        @BindView(R.id.tv_contents)
+        TextView tv_contents;
 
         @BindView(R.id.tv_date)
         TextView tv_date;

@@ -49,10 +49,12 @@
                     android:ems="10"
                     android:gravity="top"
                     android:hint="제목을 입력하세요."
+                    android:singleLine="true"
+                    android:background="@null"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textCursorDrawable="@null"
-                    android:textSize="20dp" />
+                    android:textSize="25dp" />
 
                 <EditText
                     android:id="@+id/tv_detail_content"
