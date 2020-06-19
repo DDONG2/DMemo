@@ -11,6 +11,10 @@ public interface AddMemoContract {
          */
         void onClickSave();
 
+        /**
+         * 음성 인식 클릭
+         */
+        void onClickVoice();
 
     }
 

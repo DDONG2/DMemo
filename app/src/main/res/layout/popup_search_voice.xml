@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="#f0f0f0"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="#fafafa">
+
+<!--            <TextView-->
+<!--                android:id="@+id/textView1"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:text="@string/search_voice_title"-->
+<!--                android:textColor="#4c4d4f"-->
+<!--                android:textSize="@dimen/font_14"-->
+<!--                android:textStyle="bold"/>-->
+
+            <ImageView
+                android:id="@+id/search_voice_iv_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:src="@drawable/popup_close_nor"/>
+        </RelativeLayout>
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView2"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="1px"-->
+<!--            android:background="@drawable/line_000000_18"/>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#f0f0f0"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+<!--            <FrameLayout-->
+<!--                android:id="@+id/search_voice_fl_mic"-->
+<!--                android:layout_width="140dp"-->
+<!--                android:layout_height="140dp"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:background="@drawable/pop_voice_bg_selector">-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageView3"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/pop_voice_ic_selector"/>-->
+
+<!--                <ImageView-->
+<!--                    android:id="@+id/search_voice_iv_ani"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@drawable/ani_recognize"/>-->
+
+<!--                <ProgressBar-->
+<!--                    android:id="@+id/remote_voice_pb_recognize"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:indeterminateDrawable="@drawable/progress_recognize"/>-->
+<!--            </FrameLayout>-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="74dp"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/search_voice_tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="4dp"
+                    android:text="감지중입니다."
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

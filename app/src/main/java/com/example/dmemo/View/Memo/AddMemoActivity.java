@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dmemo.Utils.VoiceInputDialog;
 import com.example.dmemo.View.Main.MainActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.Utils.DBHelper;
@@ -54,53 +55,18 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
     Button btn_add_memo_voice;
 
 
-    Intent intent;
-    SpeechRecognizer mRecognizer;
-    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_memo);
         ButterKnife.bind(this);
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.RECORD_AUDIO)) {
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.RECORD_AUDIO}, MY_PERMISSIONS_RECORD_AUDIO
-                );
-            }
-        }
-        intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");
-
-        mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        mRecognizer.setRecognitionListener(recognitionListener);
-
-
-
-        Button button = (Button) findViewById(R.id.btn_add_memo_voice);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mRecognizer.startListening(intent);
-            }
-        });
-
-
 
 
         // Edit Text 포커스 주고 키보드 올리기
         et_title.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        InputMethodManager immUp = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        immUp.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
 
     }
@@ -108,7 +74,7 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
 
     @Override
     public Context getActivityContext() {
-        return null;
+        return this;
     }
 
     @Override
@@ -150,52 +116,16 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
         finish();
     }
 
-    private RecognitionListener recognitionListener = new RecognitionListener() {
-        @Override
-        public void onReadyForSpeech(Bundle bundle) {
-        }
 
-        @Override
-        public void onBeginningOfSpeech() {
-        }
+    @OnClick(R.id.btn_add_memo_voice)
+    @Override
+    public void onClickVoice() {
+        InputMethodManager immDown = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE); // 키보드 숨기기
+        immDown.hideSoftInputFromWindow(et_title.getWindowToken(), 0);
+        immDown.hideSoftInputFromWindow(et_content.getWindowToken(), 0);
+        VoiceInputDialog pop = new VoiceInputDialog(AddMemoActivity.this);
+        pop.show();
+    }
 
-        @Override
-        public void onRmsChanged(float v) {
-        }
-
-        @Override
-        public void onBufferReceived(byte[] bytes) {
-        }
-
-        @Override
-        public void onEndOfSpeech() {
-        }
-
-        @Override
-        public void onError(int i) {
-            Toast.makeText(getApplicationContext(),
-                    "어서 말씀 해 주세요!", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onResults(Bundle bundle) {
-            String key = "";
-            key = SpeechRecognizer.RESULTS_RECOGNITION;
-            ArrayList<String> mResult = bundle.getStringArrayList(key);
-
-            String[] rs = new String[mResult.size()];
-            mResult.toArray(rs);
-
-            et_content.setText(rs[0]);
-        }
-
-        @Override
-        public void onPartialResults(Bundle bundle) {
-        }
-
-        @Override
-        public void onEvent(int i, Bundle bundle) {
-        }
-    };
 
 }
