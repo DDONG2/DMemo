@@ -1,10 +1,14 @@
 package com.example.dmemo.View.Main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -61,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @BindView(R.id.cb_edit_selected_all)
     CheckBox cb_edit_selected_all;
 
+    //마이크 권한 체크
+    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
+
     /**
      * 애니메이션
      */
@@ -99,6 +106,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         presenter = new MainPresenter(this);
         presenter.onStartPresenter();
+
+        //마이크 권한 체크
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECORD_AUDIO)) {
+
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO}, MY_PERMISSIONS_RECORD_AUDIO
+                );
+            }
+        }
+
 
 // ★제이슨 연습용★
 //        String a = "{\"ret_code\":\"1000\",\"ret_msg\":\"처리 결과 응답 메시지\"" +
