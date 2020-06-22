@@ -18,6 +18,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -44,6 +46,12 @@ public class VoiceInputDialog extends Dialog {
 
     @BindView(R.id.search_voice_iv_close)
     ImageView Search_voice_iv_close;
+
+
+    @BindView(R.id.iv_loding_view)
+    ImageView iv_loding_view;
+
+    private Animation anim_Loding;
 
     Intent intent;
 
@@ -109,6 +117,9 @@ public class VoiceInputDialog extends Dialog {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        anim_Loding = AnimationUtils.loadAnimation(mContext, R.anim.rotate);
+        iv_loding_view.setAnimation(anim_Loding);
     }
 
     private RecognitionListener recognitionListener = new RecognitionListener() {
