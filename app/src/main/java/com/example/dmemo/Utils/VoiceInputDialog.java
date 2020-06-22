@@ -52,6 +52,20 @@ public class VoiceInputDialog extends Dialog {
 
     private Context mContext;
 
+    private CustomDialogListener customDialogListener;
+
+    //인터페이스 설정
+    public interface CustomDialogListener{
+        void onPositiveClicked(String text);
+    }
+
+    //호출할 리스너 초기화
+    public void setDialogListener(CustomDialogListener customDialogListener){
+        this.customDialogListener = customDialogListener;
+    }
+
+
+
     public VoiceInputDialog(Context context) {
         super(context, R.style.popup);
 
@@ -132,9 +146,10 @@ public class VoiceInputDialog extends Dialog {
             String[] rs = new String[mResult.size()];
             mResult.toArray(rs);
 
-
-            dismiss();
             //  et_content.setText(rs[0]); // TODO: 콜백메소드 구현해서 던져줘야함
+            customDialogListener.onPositiveClicked(rs[0]);
+            dismiss();
+
         }
 
         @Override

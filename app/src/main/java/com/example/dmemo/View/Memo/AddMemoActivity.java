@@ -124,8 +124,22 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
         immDown.hideSoftInputFromWindow(et_title.getWindowToken(), 0);
         immDown.hideSoftInputFromWindow(et_content.getWindowToken(), 0);
         VoiceInputDialog pop = new VoiceInputDialog(AddMemoActivity.this);
+        pop.setDialogListener(new VoiceInputDialog.CustomDialogListener() {
+            @Override
+            public void onPositiveClicked(String text) {
+                et_content.setText(text);
+            }
+        });
+
+
         pop.show();
     }
+
+    interface CustomDialogListener{
+        void onPositiveClicked(String name, String age, String addr);
+        void onNegativeClicked();
+    }
+
 
 
 }
