@@ -127,7 +127,13 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
         pop.setDialogListener(new VoiceInputDialog.CustomDialogListener() {
             @Override
             public void onPositiveClicked(String text) {
-                et_content.setText(text);
+
+                String getEdit = et_content.getText().toString();
+                if(getEdit.getBytes().length <= 0) {
+                    et_content.setText(text);
+                } else{
+                    et_content.setText(getEdit + " " + text);
+                }
             }
         });
 

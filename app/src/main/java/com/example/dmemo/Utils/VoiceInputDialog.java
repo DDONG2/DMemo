@@ -49,6 +49,7 @@ public class VoiceInputDialog extends Dialog {
 
     SpeechRecognizer mRecognizer;
 
+    private boolean secondResult = true;
 
     private Context mContext;
 
@@ -139,17 +140,20 @@ public class VoiceInputDialog extends Dialog {
 
         @Override
         public void onResults(Bundle bundle) {
-            String key = "";
-            key = SpeechRecognizer.RESULTS_RECOGNITION;
-            ArrayList<String> mResult = bundle.getStringArrayList(key);
+            if(secondResult) {
+                String key = "";
+                key = SpeechRecognizer.RESULTS_RECOGNITION;
+                ArrayList<String> mResult = bundle.getStringArrayList(key);
 
-            String[] rs = new String[mResult.size()];
-            mResult.toArray(rs);
+                String[] rs = new String[mResult.size()];
+                mResult.toArray(rs);
 
-            //  et_content.setText(rs[0]); // TODO: 콜백메소드 구현해서 던져줘야함
-            customDialogListener.onPositiveClicked(rs[0]);
-            dismiss();
+                //  et_content.setText(rs[0]); // TODO: 콜백메소드 구현해서 던져줘야함
+                customDialogListener.onPositiveClicked(rs[0]);
+                secondResult = false;
+                dismiss();
 
+            }
         }
 
         @Override
