@@ -22,7 +22,7 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:background="@color/main_color"
+                android:background="@drawable/selector_btn"
                 android:onClick="onClick"
                 android:text="음성 작성" />
 
@@ -31,7 +31,7 @@
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:background="@color/main_color"
+                android:background="@drawable/selector_btn"
                 android:onClick="onClick"
                 android:text="저장" />
         </LinearLayout>
