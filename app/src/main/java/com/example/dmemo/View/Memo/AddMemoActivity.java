@@ -141,11 +141,5 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
         pop.show();
     }
 
-    interface CustomDialogListener{
-        void onPositiveClicked(String name, String age, String addr);
-        void onNegativeClicked();
-    }
-
-
 
 }
