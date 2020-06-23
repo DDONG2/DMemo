@@ -15,7 +15,17 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white_gray2"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_add_memo_voice"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:background="@color/main_color"
+                android:onClick="onClick"
+                android:text="음성 작성"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/btn_submit"

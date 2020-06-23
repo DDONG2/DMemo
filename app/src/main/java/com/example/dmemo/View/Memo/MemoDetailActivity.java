@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.example.dmemo.Utils.VoiceInputDialog;
 import com.example.dmemo.View.Main.MainActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.Utils.DBHelper;
@@ -40,6 +42,9 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
 
     @BindView(R.id.btn_submit)
     Button btn_submit;
+
+    @BindView(R.id.btn_add_memo_voice)
+    Button btn_add_memo_voice;
 
     private int id;
     private String title;
@@ -92,7 +97,33 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
         finish();
     }
 
-    @Override
+
+    @OnClick({R.id.btn_add_memo_voice})
+    public void onClickVoiceButton() {
+        InputMethodManager immDown = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE); // 키보드 숨기기
+        immDown.hideSoftInputFromWindow(et_detail_title.getWindowToken(), 0);
+        immDown.hideSoftInputFromWindow(et_detail_content.getWindowToken(), 0);
+        VoiceInputDialog pop = new VoiceInputDialog(MemoDetailActivity.this);
+        pop.setDialogListener(new VoiceInputDialog.CustomDialogListener() {
+            @Override
+            public void onPositiveClicked(String text) {
+
+                String getEdit = et_detail_content.getText().toString();
+                if(getEdit.getBytes().length <= 0) {
+                    et_detail_content.setText(text);
+                } else{
+                    et_detail_content.setText(getEdit + " " + text);
+                }
+            }
+        });
+
+
+        pop.show();
+    }
+
+
+
+        @Override
     public Context getActivityContext() {
         return null;
     }
@@ -114,6 +145,7 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
                     case MotionEvent.ACTION_DOWN: {
                         //터치했을 때의 이벤트
                         btn_submit.setVisibility(View.VISIBLE);
+                        btn_add_memo_voice.setVisibility(View.VISIBLE);
                         break;
                     }
                 }
@@ -126,6 +158,7 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
                     case MotionEvent.ACTION_DOWN: {
                         //터치했을 때의 이벤트
                         btn_submit.setVisibility(View.VISIBLE);
+                        btn_add_memo_voice.setVisibility(View.VISIBLE);
                         break;
                     }
                 }
