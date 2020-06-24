@@ -1,7 +1,9 @@
 package com.example.dmemo.View.Main;
 
+import com.example.dmemo.Adapter.MemoAdapter;
 import com.example.dmemo.Model.main.MainRepository;
 import com.example.dmemo.Network.CommonNetworkCallback;
+import com.example.dmemo.Utils.recycleCallBack;
 import com.example.dmemo.dateDTO.memoListDTO;
 
 import java.util.ArrayList;
@@ -10,6 +12,8 @@ public class MainPresenter implements MainContract.Presenter, CommonNetworkCallb
 
     private MainContract.View view;
     private MainRepository repository;
+
+    private MemoAdapter mAdapter;
 
 
     public MainPresenter(MainContract.View view) {

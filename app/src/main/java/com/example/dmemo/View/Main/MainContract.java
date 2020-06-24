@@ -14,7 +14,9 @@ public interface MainContract {
          */
         void onClickAddMemo();
 
+        void onCheckAll(boolean isCheck);
 
+        void onCheckOneList(ArrayList<String> checkOneList);
     }
 
     interface Presenter extends BasePresenter {

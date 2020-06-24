@@ -3,6 +3,7 @@ package com.example.dmemo.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dmemo.Utils.recycleCallBack;
+import com.example.dmemo.View.Main.MainActivity;
+import com.example.dmemo.View.Main.MainContract;
 import com.example.dmemo.View.Memo.MemoDetailActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.dateDTO.memoListDTO;
@@ -27,6 +31,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
     private ArrayList<memoListDTO> feedList = new ArrayList<>();
 
+    private MainContract.View callback;
+
+    private int memoId;
     /**
      * 롱클릭 후 수정 모드 여부
      */
@@ -43,11 +50,19 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     /**
      * 낱개 선택 리스너
      */
-    private CompoundButton.OnCheckedChangeListener checkItemlistener;
+//    private CompoundButton.OnCheckedChangeListener checkItemlistener;
     /**
      * 리스트 아이템 판별을 위한 DTO (_id)
      */
     private memoListDTO memoListForCheckBox;
+    /**
+     * 체크박스 낱개
+     */
+    private ArrayList<String> checkOne = new ArrayList<>();
+
+    public void setCallback(MainContract.View callback) {
+        this.callback = callback;
+    }
 
     public void setFeedList(ArrayList<memoListDTO> feedList) {
         this.feedList = feedList;
@@ -57,9 +72,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         this.onLongClickListener = listener;
     }
 
-    public void setCheckItemlistener(CompoundButton.OnCheckedChangeListener checkItemlistener) {
-        this.checkItemlistener = checkItemlistener;
-    }
+//    public void setCheckItemlistener(CompoundButton.OnCheckedChangeListener checkItemlistener) {
+//        this.checkItemlistener = checkItemlistener;
+//    }
 
     @Override
     public MemoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -76,6 +91,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     @Override
     public void onBindViewHolder(final MemoViewHolder holder, int position) {
 
+        Log.d("도은아", position + "");
         final memoListDTO item = feedList.get(position);
 
         memoListForCheckBox = feedList.get(position);
@@ -83,12 +99,45 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         holder.tv_title.setText(item.getTitle());
         holder.tv_contents.setText(item.getContent());
         holder.tv_date.setText(item.getDate());
-        holder.cb_edit_selected.setTag(memoListForCheckBox);
+        holder.cb_edit_selected.setTag(memoListForCheckBox.getId());
         holder.cb_edit_selected.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
-        holder.cb_edit_selected.setOnCheckedChangeListener(checkItemlistener);
-        if (isEditMode){
-            holder.cb_edit_selected.setChecked(isAllClick ? true : false);
+        holder.cb_edit_selected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                memoId = (int) v.getTag();
+
+                if(holder.cb_edit_selected.isChecked()) {
+                    holder.cb_edit_selected.setChecked(true);
+                    checkOne.add(Integer.toString(memoId));
+                    callback.onCheckOneList(checkOne);
+                    if (checkOne.size() > 0 && checkOne.size() == getItemCount()) {
+
+                        callback.onCheckAll(true);
+                        isAllClick = true;
+                        //전체선택 true
+                    }
+                    //전체선택 false
+                }else{
+                    holder.cb_edit_selected.setChecked(false);
+                    checkOne.remove(Integer.toString(memoId));
+
+                    callback.onCheckAll(false);
+                    callback.onCheckOneList(checkOne);
+                    isAllClick = false;
+
+                }
+            }
+        });
+
+        if(isEditMode && isAllClick){     // 모두선택이면 모든체크박스 true
+            holder.cb_edit_selected.setChecked(true);
+        }else if(isEditMode && !isAllClick && checkOne(holder)){ // 모두선택이 아니고(체크박스 낱개로 해제시) 그려지지않은 부분은 true
+            holder.cb_edit_selected.setChecked(true);
+        }else{
+            holder.cb_edit_selected.setChecked(false);           // 모두선택이 아니면 false
         }
+
         holder.ll_memo_list.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -110,6 +159,19 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
 
     }
+    /**
+     * 전체선택 후 1개 리스트를 빼고 스크롤하면 아래쪽 체크리스트가 풀리는 오류를 해결하기 위한 플래그 매소드
+     */
+    public boolean checkOne(MemoViewHolder holder){
+        boolean b = false;
+        for(int i = 0; i < checkOne.size(); i++){
+            Log.d("도은아", holder.cb_edit_selected.getTag().toString() + "////"+ checkOne.get(i));
+            if(holder.cb_edit_selected.getTag().toString().equals(checkOne.get(i))){
+            return true;
+         }
+     }
+     return false;
+    }
 
     public boolean getEditMode() {
         return isEditMode;
@@ -127,6 +189,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         isAllClick = allClick;
     }
 
+    public void setCheckOne(ArrayList<String> checkOneList) {
+        checkOne = checkOneList;
+    }
     @Override
     public long getItemId(int position) {
         return position;

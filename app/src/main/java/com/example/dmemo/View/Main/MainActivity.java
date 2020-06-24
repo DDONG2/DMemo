@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         initAnimationView();
         initView();
+        adapter.setCallback(this);
 
     }
 
@@ -322,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                         checkOne.add(Integer.toString(memoList.get(i).getId()));
                     }
                     adapter.setIsAllClick(true);
+                    adapter.setCheckOne(checkOne);
                     Handler handler = new Handler();
                     final Runnable r = new Runnable() {  // 쓰레드 post 를 해준 이유는 리사이클러뷰 UI 쓰레드 이슈 떄문
                         public void run() {
@@ -336,6 +338,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                     isFirstCheck = false;
                     checkOne.clear();
                     adapter.setIsAllClick(false);
+                    adapter.setCheckOne(checkOne);
                     Handler handler = new Handler();
                     final Runnable r = new Runnable() {
                         public void run() {
@@ -355,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) + "개");
             adapter.setFeedList(memoList);
             adapter.setLongClickItemlistener(longClickListener);
-            adapter.setCheckItemlistener(itemCheckListener);
+            //adapter.setCheckItemlistener(itemCheckListener);
             rcMemoList.setAdapter(adapter);
 
             LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -427,28 +430,28 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     /**
      * 리스트 체크박스 리스너
      */
-    private CompoundButton.OnCheckedChangeListener itemCheckListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (buttonView.getTag().toString().indexOf(memoListDTO.class.getSimpleName()) > 0) {
-                memoListDTO memolist = (memoListDTO) buttonView.getTag();
-                if (isChecked) {
-                    if (!isFirstCheck) {  // 전체선택이 아닌 낱개선택일시에만 checkOne 에 add 해준다.
-                        checkOne.add(Integer.toString(memolist.getId()));
-                    }
-                    if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
-                        cb_edit_selected_all.setChecked(true);
-                        isFirstCheck = true;
-                    }
-                } else {
-                    checkOne.remove(Integer.toString(memolist.getId()));
-                    isFirstCheck = false;                       // 낱개가 하나라도 없어질경우 전체선택이 아님으로 전체선택 플래그를 false로 만든다.
-                    cb_edit_selected_all.setChecked(false);
-
-                }
-            }
-        }
-    };
+//    private CompoundButton.OnCheckedChangeListener itemCheckListener = new CompoundButton.OnCheckedChangeListener() {
+//        @Override
+//        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//            if (buttonView.getTag().toString().indexOf(memoListDTO.class.getSimpleName()) > 0) {
+//                memoListDTO memolist = (memoListDTO) buttonView.getTag();
+//                if (isChecked) {
+//                    if (!isFirstCheck) {  // 전체선택이 아닌 낱개선택일시에만 checkOne 에 add 해준다.
+//                        checkOne.add(Integer.toString(memolist.getId()));
+//                    }
+//                    if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
+//                        cb_edit_selected_all.setChecked(true);
+//                        isFirstCheck = true;
+//                    }
+//                } else {
+//                    checkOne.remove(Integer.toString(memolist.getId()));
+//                    isFirstCheck = false;                       // 낱개가 하나라도 없어질경우 전체선택이 아님으로 전체선택 플래그를 false로 만든다.
+//                    cb_edit_selected_all.setChecked(false);
+//
+//                }
+//            }
+//        }
+//    };
 
     /**
      * 롱클릭 리스너
@@ -456,6 +459,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
+            adapter.setCallback(MainActivity.this);
             // 오랫동안 눌렀을 때 이벤트가 발생됨
             Toast.makeText(getApplicationContext(),
                     "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
@@ -501,25 +505,32 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      */
     @OnClick(R.id.btn_main_delete)
     public void onClicksubmit() {
-        DBHelper helper = new DBHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
 
-        if (cb_edit_selected_all.isChecked()) { //전체선택이 되어있을땐 모든 데이터를 지운다.
-            for (int i = 0; i < memoList.size(); i++) {
-                String sql = "delete from  mytable where _id = '" + memoList.get(i).getId() + "'";
-                db.execSQL(sql);
+        if(checkOne.size()>0) {
+            DBHelper helper = new DBHelper(this);
+            SQLiteDatabase db = helper.getWritableDatabase();
+
+            if (cb_edit_selected_all.isChecked()) { //전체선택이 되어있을땐 모든 데이터를 지운다.
+                for (int i = 0; i < memoList.size(); i++) {
+                    String sql = "delete from  mytable where _id = '" + memoList.get(i).getId() + "'";
+                    db.execSQL(sql);
+                }
+            } else {
+                for (int i = 0; i < checkOne.size(); i++) {  //전체선택이 아닐경우 선택된 데이터만 지운다.
+                    String sql = "delete from  mytable where _id = '" + checkOne.get(i) + "'";
+                    db.execSQL(sql);
+                }
             }
-        } else {
-            for (int i = 0; i < checkOne.size(); i++) {  //전체선택이 아닐경우 선택된 데이터만 지운다.
-                String sql = "delete from  mytable where _id = '" + checkOne.get(i) + "'";
-                db.execSQL(sql);
-            }
-        }
-        cb_edit_selected_all.setVisibility(View.GONE);
+            cb_edit_selected_all.setVisibility(View.GONE);
 //        checkAll.clear();
-        checkOne.clear();
-        initView();
-        ll_edit_select_bar.startAnimation(anim_up);
+            checkOne.clear();
+            initView();
+            ll_edit_select_bar.startAnimation(anim_up);
+        }else{
+            Toast.makeText(getApplicationContext(),
+                    "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     /**
@@ -532,5 +543,18 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         startActivity(intent);
     }
 
+    @Override
+    public void onCheckOneList(ArrayList<String> checkOneList) {
+        checkOne = checkOneList;
+    }
+
+    @Override
+    public void onCheckAll(boolean isCheck) {
+        if(isCheck) {
+            cb_edit_selected_all.setChecked(true);
+        }else{
+            cb_edit_selected_all.setChecked(false);
+        }
+    }
 
 }
