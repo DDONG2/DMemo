@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.dmemo.Utils.recycleCallBack;
 import com.example.dmemo.View.Main.MainActivity;
 import com.example.dmemo.View.Main.MainContract;
 import com.example.dmemo.View.Memo.MemoDetailActivity;
@@ -31,7 +30,6 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
 
     private ArrayList<memoListDTO> feedList = new ArrayList<>();
 
-    private MainContract.View callback;
 
     private int memoId;
     /**
@@ -50,7 +48,7 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
     /**
      * 낱개 선택 리스너
      */
-//    private CompoundButton.OnCheckedChangeListener checkItemlistener;
+    private CompoundButton.OnClickListener checkItemlistener;
     /**
      * 리스트 아이템 판별을 위한 DTO (_id)
      */
@@ -60,10 +58,6 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
      */
     private ArrayList<String> checkOne = new ArrayList<>();
 
-    public void setCallback(MainContract.View callback) {
-        this.callback = callback;
-    }
-
     public void setFeedList(ArrayList<memoListDTO> feedList) {
         this.feedList = feedList;
     }
@@ -72,9 +66,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         this.onLongClickListener = listener;
     }
 
-//    public void setCheckItemlistener(CompoundButton.OnCheckedChangeListener checkItemlistener) {
-//        this.checkItemlistener = checkItemlistener;
-//    }
+    public void setCheckItemlistener(CompoundButton.OnClickListener checkItemlistener) {
+        this.checkItemlistener = checkItemlistener;
+    }
 
     @Override
     public MemoViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -101,34 +95,8 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.MemoViewHolder
         holder.tv_date.setText(item.getDate());
         holder.cb_edit_selected.setTag(memoListForCheckBox.getId());
         holder.cb_edit_selected.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
-        holder.cb_edit_selected.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.cb_edit_selected.setOnClickListener(checkItemlistener);
 
-                memoId = (int) v.getTag();
-
-                if(holder.cb_edit_selected.isChecked()) {
-                    holder.cb_edit_selected.setChecked(true);
-                    checkOne.add(Integer.toString(memoId));
-                    callback.onCheckOneList(checkOne);
-                    if (checkOne.size() > 0 && checkOne.size() == getItemCount()) {
-
-                        callback.onCheckAll(true);
-                        isAllClick = true;
-                        //전체선택 true
-                    }
-                    //전체선택 false
-                }else{
-                    holder.cb_edit_selected.setChecked(false);
-                    checkOne.remove(Integer.toString(memoId));
-
-                    callback.onCheckAll(false);
-                    callback.onCheckOneList(checkOne);
-                    isAllClick = false;
-
-                }
-            }
-        });
 
         if(isEditMode && isAllClick){     // 모두선택이면 모든체크박스 true
             holder.cb_edit_selected.setChecked(true);

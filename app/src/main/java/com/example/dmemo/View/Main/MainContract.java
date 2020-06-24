@@ -13,10 +13,6 @@ public interface MainContract {
          * 메모 추가 클릭
          */
         void onClickAddMemo();
-
-        void onCheckAll(boolean isCheck);
-
-        void onCheckOneList(ArrayList<String> checkOneList);
     }
 
     interface Presenter extends BasePresenter {

@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     //마이크 권한 체크
     private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
 
+    private int memoId;
+
     /**
      * 애니메이션
      */
@@ -159,7 +161,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
         initAnimationView();
         initView();
-        adapter.setCallback(this);
 
     }
 
@@ -358,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) + "개");
             adapter.setFeedList(memoList);
             adapter.setLongClickItemlistener(longClickListener);
-            //adapter.setCheckItemlistener(itemCheckListener);
+            adapter.setCheckItemlistener(itemCheckListener);
             rcMemoList.setAdapter(adapter);
 
             LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -430,28 +431,35 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     /**
      * 리스트 체크박스 리스너
      */
-//    private CompoundButton.OnCheckedChangeListener itemCheckListener = new CompoundButton.OnCheckedChangeListener() {
-//        @Override
-//        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//            if (buttonView.getTag().toString().indexOf(memoListDTO.class.getSimpleName()) > 0) {
-//                memoListDTO memolist = (memoListDTO) buttonView.getTag();
-//                if (isChecked) {
-//                    if (!isFirstCheck) {  // 전체선택이 아닌 낱개선택일시에만 checkOne 에 add 해준다.
-//                        checkOne.add(Integer.toString(memolist.getId()));
-//                    }
-//                    if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {   // 낱개로 선택해서 전체갯수가 될때 전체선택 체크박스를 트루로 만든다.
-//                        cb_edit_selected_all.setChecked(true);
-//                        isFirstCheck = true;
-//                    }
-//                } else {
-//                    checkOne.remove(Integer.toString(memolist.getId()));
-//                    isFirstCheck = false;                       // 낱개가 하나라도 없어질경우 전체선택이 아님으로 전체선택 플래그를 false로 만든다.
-//                    cb_edit_selected_all.setChecked(false);
-//
-//                }
-//            }
-//        }
-//    };
+    private CompoundButton.OnClickListener itemCheckListener = new CompoundButton.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            memoId = (int) v.getTag();
+
+            CheckBox check = (CheckBox) v;
+            if(check.isChecked()) {
+                check.setChecked(true);
+                checkOne.add(Integer.toString(memoId));
+                if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {
+
+                    cb_edit_selected_all.setChecked(true);
+
+                    adapter.setIsAllClick(true);
+                    //전체선택 true
+                }
+                //전체선택 false
+            }else{
+                check.setChecked(false);
+                checkOne.remove(Integer.toString(memoId));
+
+                cb_edit_selected_all.setChecked(false);
+
+                adapter.setIsAllClick(false);
+
+            }
+        }
+    };
 
     /**
      * 롱클릭 리스너
@@ -459,7 +467,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            adapter.setCallback(MainActivity.this);
             // 오랫동안 눌렀을 때 이벤트가 발생됨
             Toast.makeText(getApplicationContext(),
                     "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
@@ -543,18 +550,5 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         startActivity(intent);
     }
 
-    @Override
-    public void onCheckOneList(ArrayList<String> checkOneList) {
-        checkOne = checkOneList;
-    }
-
-    @Override
-    public void onCheckAll(boolean isCheck) {
-        if(isCheck) {
-            cb_edit_selected_all.setChecked(true);
-        }else{
-            cb_edit_selected_all.setChecked(false);
-        }
-    }
 
 }
