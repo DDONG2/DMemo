@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dmemo.Utils.VoiceInputDialog;
 import com.example.dmemo.View.Main.MainActivity;
@@ -114,6 +115,11 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
                 } else{
                     et_detail_content.setText(getEdit + " " + text);
                 }
+            }
+
+            @Override
+            public void onError() {
+                Toast.makeText(getApplicationContext(), "다시 말씀 해 주세요!", Toast.LENGTH_SHORT).show();
             }
         });
 

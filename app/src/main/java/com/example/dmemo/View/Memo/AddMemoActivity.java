@@ -135,6 +135,11 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
                     et_content.setText(getEdit + " " + text);
                 }
             }
+
+            @Override
+            public void onError() {
+                Toast.makeText(getApplicationContext(), "다시 말씀 해 주세요!", Toast.LENGTH_SHORT).show();
+            }
         });
 
 

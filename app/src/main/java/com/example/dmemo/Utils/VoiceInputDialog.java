@@ -66,6 +66,8 @@ public class VoiceInputDialog extends Dialog {
     //인터페이스 설정
     public interface CustomDialogListener{
         void onPositiveClicked(String text);
+
+        void onError();
     }
 
     //호출할 리스너 초기화
@@ -145,7 +147,7 @@ public class VoiceInputDialog extends Dialog {
 
         @Override
         public void onError(int i) {
-            Toast.makeText(mContext, "다시 말씀 해 주세요!", Toast.LENGTH_SHORT).show();
+            customDialogListener.onError();
             dismiss();
         }
 
