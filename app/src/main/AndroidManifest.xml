@@ -33,6 +33,11 @@
             android:theme="@style/AppBaseTheme_gray"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".View.Search.SearchMemoActivity"
+            android:label="AddMemo"
+            android:theme="@style/AppBaseTheme_gray"
+            android:screenOrientation="portrait" />
 
 <!--        <activity-->
 <!--            android:name=".Activity.ProfileActivity"-->

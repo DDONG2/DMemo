@@ -27,6 +27,7 @@ import com.example.dmemo.Adapter.MemoAdapter;
 import com.example.dmemo.View.Memo.AddMemoActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.Utils.DBHelper;
+import com.example.dmemo.View.Search.SearchMemoActivity;
 import com.example.dmemo.dateDTO.memoListDTO;
 import com.google.gson.Gson;
 
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private ArrayList<memoListDTO> memoList = new ArrayList<memoListDTO>();
 
+
+    @BindView(R.id.btn_option3)
+    Button btn_option3;
 
     @BindView(R.id.btn_add_memo)
     Button btn_add_memo;
@@ -550,5 +554,12 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         startActivity(intent);
     }
 
+
+    @OnClick(R.id.btn_option3)
+    @Override
+    public void onClickSearchMemo() {
+        Intent intent = new Intent(MainActivity.this, SearchMemoActivity.class);
+        startActivity(intent);
+    }
 
 }
