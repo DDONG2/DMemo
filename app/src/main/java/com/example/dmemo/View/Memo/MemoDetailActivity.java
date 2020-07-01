@@ -139,30 +139,24 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
     }
 
     public void touchListener() {
-        et_detail_title.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        //터치했을 때의 이벤트
-                        btn_submit.setVisibility(View.VISIBLE);
-                        btn_add_memo_voice.setVisibility(View.VISIBLE);
-                        break;
-                    }
+        et_detail_title.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    //to do
+                    btn_submit.setVisibility(View.VISIBLE);
+                    btn_add_memo_voice.setVisibility(View.VISIBLE);
                 }
-                return false;
             }
         });
-        et_detail_content.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        //터치했을 때의 이벤트
-                        btn_submit.setVisibility(View.VISIBLE);
-                        btn_add_memo_voice.setVisibility(View.VISIBLE);
-                        break;
-                    }
+        et_detail_content.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    //to do
+                    btn_submit.setVisibility(View.VISIBLE);
+                   btn_add_memo_voice.setVisibility(View.VISIBLE);
                 }
-                return false;
             }
         });
 
