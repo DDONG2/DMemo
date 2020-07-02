@@ -60,9 +60,8 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
         public void afterTextChanged(Editable s) {
             memoList.clear();
 
-            if (s.length() == 0) {
-                tv_empty.setVisibility(View.VISIBLE);
-            } else {
+            if (s.length() != 0) {
+
                 DBHelper helper = new DBHelper(getActivityContext());
                 SQLiteDatabase db = helper.getWritableDatabase();
                 Cursor cursor = db.rawQuery("select _id, title, content, date, imagepath from mytable where title like '%" + s + "%' or content like '%" + s + "%' order by _id desc", null);
@@ -78,6 +77,7 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
                     //checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
                 }
                 db.close();
+            }
                 if (memoList.size() <= 0) {
                     adapter.setFeedList(memoList);
                     adapter.notifyDataSetChanged();
@@ -88,7 +88,7 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
                     tv_empty.setVisibility(View.GONE);
 
                 }
-            }
+
         }
     };
 
