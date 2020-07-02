@@ -65,7 +65,7 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
             } else {
                 DBHelper helper = new DBHelper(getActivityContext());
                 SQLiteDatabase db = helper.getWritableDatabase();
-                Cursor cursor = db.rawQuery("select _id, title, content, date, imagepath from mytable where title like '%" + s + "%' AND content like '%" + s + "%' order by _id desc", null);
+                Cursor cursor = db.rawQuery("select _id, title, content, date, imagepath from mytable where title like '%" + s + "%' or content like '%" + s + "%' order by _id desc", null);
                 //결국 cursor 에 select한 값이 들어온다!!
                 while (cursor.moveToNext()) {
                     memoListDTO memo = new memoListDTO();

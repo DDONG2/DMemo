@@ -18,12 +18,13 @@
                 android:id="@+id/et_search"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:background="@color/white"
                 android:ems="10"
                 android:gravity="top"
-                android:singleLine="true"
-                android:background="@color/white"
+                android:hint="검색"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:singleLine="true"
                 android:textCursorDrawable="@null"
                 android:textSize="25dp" />
 
