@@ -13,8 +13,16 @@ public interface SearchMemoContract {
     }
 
     interface Presenter extends BasePresenter {
-
+        /**
+         * 검색 메모 리스트
+         */
         ArrayList<memoListDTO> callSearchInfoDATA(String searchText);
+
+        /**
+         * 검색 메모 삭제
+         */
+        void  callDeleteListDATA(boolean AllCheck, ArrayList<memoListDTO> memoList, ArrayList<String> checkOneList);
+
 
     }
 }

@@ -320,20 +320,10 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
     public void onClicksubmit() {
 
         if (checkOne.size() > 0) {
-            DBHelper helper = new DBHelper(this);
-            SQLiteDatabase db = helper.getWritableDatabase();
 
-            if (cb_edit_search_selected_all.isChecked()) { //전체선택이 되어있을땐 모든 데이터를 지운다.
-                for (int i = 0; i < memoList.size(); i++) {
-                    String sql = "delete from  mytable where _id = '" + memoList.get(i).getId() + "'";
-                    db.execSQL(sql);
-                }
-            } else {
-                for (int i = 0; i < checkOne.size(); i++) {  //전체선택이 아닐경우 선택된 데이터만 지운다.
-                    String sql = "delete from  mytable where _id = '" + checkOne.get(i) + "'";
-                    db.execSQL(sql);
-                }
-            }
+            //callDATA 메모 삭제 호출 프레젠터
+            presenter.callDeleteListDATA(cb_edit_search_selected_all.isChecked(), memoList, checkOne);
+
             cb_edit_search_selected_all.setVisibility(View.GONE);
 
             checkOne.clear();

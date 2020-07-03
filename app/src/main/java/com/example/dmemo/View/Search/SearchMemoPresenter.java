@@ -41,4 +41,9 @@ public class SearchMemoPresenter implements SearchMemoContract.Presenter, Common
     public ArrayList<memoListDTO> callSearchInfoDATA(String searchText) {
         return repository.callSearchInfoDATA(searchText);
     }
+
+    @Override
+    public void callDeleteListDATA(boolean AllCheck, ArrayList<memoListDTO> memoList, ArrayList<String> checkOneList) {
+        repository.callDeleteList(AllCheck, memoList, checkOneList);
+    }
 }

@@ -44,4 +44,27 @@ public class SearchMemoRepository  extends BaseRepository {
 
         return memoList;
     }
+
+    public void callDeleteList(boolean allCheck, ArrayList<memoListDTO> memoList, ArrayList<String> checkOneList) {
+
+        DBHelper helper = new DBHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        if (allCheck) { //전체선택이 되어있을땐 모든 데이터를 지운다.
+            for (int i = 0; i < memoList.size(); i++) {
+                String sql = "delete from  mytable where _id = '" + memoList.get(i).getId() + "'";
+                db.execSQL(sql);
+            }
+        } else {
+            for (int i = 0; i < checkOneList.size(); i++) {  //전체선택이 아닐경우 선택된 데이터만 지운다.
+                String sql = "delete from  mytable where _id = '" + checkOneList.get(i) + "'";
+                db.execSQL(sql);
+            }
+        }
+
+
+    }
+
+
+
 }
