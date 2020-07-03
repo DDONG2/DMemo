@@ -2,6 +2,9 @@ package com.example.dmemo.View.Search;
 
 import com.example.dmemo.BasePresenter;
 import com.example.dmemo.BaseView;
+import com.example.dmemo.dateDTO.memoListDTO;
+
+import java.util.ArrayList;
 
 public interface SearchMemoContract {
 
@@ -11,6 +14,7 @@ public interface SearchMemoContract {
 
     interface Presenter extends BasePresenter {
 
+        ArrayList<memoListDTO> callSearchInfoDATA(String searchText);
 
     }
 }

@@ -345,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         });
 
         memoList.clear();
+        //callDATA 메모 리스트 호출 프레젠터
         memoList = presenter.callMainInfoDATA();
 
         adapter = new MemoAdapter();
@@ -491,7 +492,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void onBackPressed() {
         if (!adapter.getEditMode()) {
             finish();
-        } else {
+        } else { // 수정모드일때
             checkOne.clear();
             adapter.setIsAllClick(false);
             adapter.setEditMode(false);

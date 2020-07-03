@@ -103,7 +103,7 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
         ButterKnife.bind(this);
 
         presenter = new SearchMemoPresenter(this);
-        //  presenter.onStartPresenter();
+          presenter.onStartPresenter();
         initView();
 
         initAnimationView();
@@ -263,22 +263,8 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
      */
     public void onRefreshAdapter() {
         if (searchText.length() != 0) {
-
-            DBHelper helper2 = new DBHelper(getActivityContext());
-            SQLiteDatabase db2 = helper2.getWritableDatabase();
-            Cursor cursor = db2.rawQuery("select _id, title, content, date, imagepath from mytable where title like '%" + searchText + "%' or content like '%" + searchText + "%' order by _id desc", null);
-            //결국 cursor 에 select한 값이 들어온다!!
-            while (cursor.moveToNext()) {
-                memoListDTO memo = new memoListDTO();
-                memo.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("_id"))));
-                memo.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-                memo.setContent(cursor.getString(cursor.getColumnIndex("content")));
-                memo.setDate(cursor.getString(cursor.getColumnIndex("date")));
-                //memo.setImagePath(cursor.getString(cursor.getColumnIndex("imagepath")));
-                memoList.add(memo);
-                //checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
-            }
-            db2.close();
+            //callDATA 메모 검색 리스트 호출 프레젠터
+            memoList = presenter.callSearchInfoDATA(searchText);
         }
         if (memoList.size() <= 0) {
             adapter.setFeedList(memoList);
