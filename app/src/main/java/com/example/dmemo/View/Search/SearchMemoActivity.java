@@ -56,13 +56,13 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
 
     private MemoAdapter adapter;
 
-    private ArrayList<memoListDTO> memoList = new ArrayList<memoListDTO>();
     /**
-     * 체크박스 전체선택 플래그 전체선택 이면 true 아니면 false.
+     * 검색 후 나온 전체 리스트 ( 검색 할 때마다 바뀜)
      */
-    private boolean isFirstCheck = false;
+    private ArrayList<memoListDTO> memoList = new ArrayList<memoListDTO>();
+
     /**
-     * 체크박스 낱개
+     * 체크박스 선택된 낱개 리스트
      */
     private ArrayList<String> checkOne = new ArrayList<>();
     /**
@@ -90,77 +90,7 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
         public void afterTextChanged(Editable s) {
             memoList.clear();
             searchText = s.toString();
-            if (s.length() != 0) {
-
-                DBHelper helper = new DBHelper(getActivityContext());
-                SQLiteDatabase db = helper.getWritableDatabase();
-                Cursor cursor = db.rawQuery("select _id, title, content, date, imagepath from mytable where title like '%" + s + "%' or content like '%" + s + "%' order by _id desc", null);
-                //결국 cursor 에 select한 값이 들어온다!!
-                while (cursor.moveToNext()) {
-                    memoListDTO memo = new memoListDTO();
-                    memo.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("_id"))));
-                    memo.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-                    memo.setContent(cursor.getString(cursor.getColumnIndex("content")));
-                    memo.setDate(cursor.getString(cursor.getColumnIndex("date")));
-                    //memo.setImagePath(cursor.getString(cursor.getColumnIndex("imagepath")));
-                    memoList.add(memo);
-                    //checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
-                }
-                db.close();
-            }
-                if (memoList.size() <= 0) {
-                    adapter.setFeedList(memoList);
-                    adapter.notifyDataSetChanged();
-                    tv_empty.setVisibility(View.VISIBLE);
-                } else {
-                    adapter.setFeedList(memoList);
-                    adapter.setLongClickItemlistener(longClickListener);
-                    adapter.notifyDataSetChanged();
-                    tv_empty.setVisibility(View.GONE);
-
-                    adapter.setCheckItemlistener(itemCheckListener);
-
-                    cb_edit_search_selected_all.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (cb_edit_search_selected_all.isChecked()) {
-                                isFirstCheck = true;
-                                checkOne.clear();
-                                for (int i = 0; i < memoList.size(); i++) { // 전체선택일경우 checkOne 클리어 후 모든 리스트를 add 해준다. (* 리사이클러뷰 뷰홀더 이슈 그려지지 않은 리스트는 갱신이 되지 않음, 데이터리스트에 들어오지 않음)
-                                    checkOne.add(Integer.toString(memoList.get(i).getId()));
-                                }
-                                adapter.setIsAllClick(true);
-                                adapter.setCheckOne(checkOne);
-                                Handler handler = new Handler();
-                                final Runnable r = new Runnable() {  // 쓰레드 post 를 해준 이유는 리사이클러뷰 UI 쓰레드 이슈 떄문
-                                    public void run() {
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                };
-                                handler.post(r);
-
-
-                                //adapter.notifyDataSetChanged();
-                            } else {
-                                isFirstCheck = false;
-                                checkOne.clear();
-                                adapter.setIsAllClick(false);
-                                adapter.setCheckOne(checkOne);
-                                Handler handler = new Handler();
-                                final Runnable r = new Runnable() {
-                                    public void run() {
-                                        adapter.notifyDataSetChanged();
-                                    }
-                                };
-                                handler.post(r);
-                            }
-                        }
-                    });
-
-
-
-
-                }
+            onRefreshAdapter();
 
         }
     };
@@ -196,6 +126,7 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
         }
     }
 
+
     @Override
     public Context getActivityContext() {
         return this;
@@ -221,6 +152,7 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
     public void onClickClose() {
 
     }
+
     /**
      * 애니메이션 효과 설정 메소드
      */
@@ -247,6 +179,9 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
         });
     }
 
+    /**
+     * 롱클릭 리스너
+     */
     private View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -289,8 +224,9 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
 
 
     }
+
     /**
-     * 리스트 체크박스 리스너
+     * 리스트 낱개 체크박스 리스너
      */
     private CompoundButton.OnClickListener itemCheckListener = new CompoundButton.OnClickListener() {
         @Override
@@ -299,7 +235,7 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
             memoId = (int) v.getTag();
 
             CheckBox check = (CheckBox) v;
-            if(check.isChecked()) {
+            if (check.isChecked()) {
                 check.setChecked(true);
                 checkOne.add(Integer.toString(memoId));
                 if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {
@@ -310,7 +246,7 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
                     //전체선택 true
                 }
                 //전체선택 false
-            }else{
+            } else {
                 check.setChecked(false);
                 checkOne.remove(Integer.toString(memoId));
 
@@ -323,12 +259,81 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
     };
 
     /**
+     * 검색어 입력,삭제 후 어뎁터 갱신하는 메소드
+     */
+    public void onRefreshAdapter() {
+        if (searchText.length() != 0) {
+
+            DBHelper helper2 = new DBHelper(getActivityContext());
+            SQLiteDatabase db2 = helper2.getWritableDatabase();
+            Cursor cursor = db2.rawQuery("select _id, title, content, date, imagepath from mytable where title like '%" + searchText + "%' or content like '%" + searchText + "%' order by _id desc", null);
+            //결국 cursor 에 select한 값이 들어온다!!
+            while (cursor.moveToNext()) {
+                memoListDTO memo = new memoListDTO();
+                memo.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("_id"))));
+                memo.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+                memo.setContent(cursor.getString(cursor.getColumnIndex("content")));
+                memo.setDate(cursor.getString(cursor.getColumnIndex("date")));
+                //memo.setImagePath(cursor.getString(cursor.getColumnIndex("imagepath")));
+                memoList.add(memo);
+                //checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
+            }
+            db2.close();
+        }
+        if (memoList.size() <= 0) {
+            adapter.setFeedList(memoList);
+            adapter.notifyDataSetChanged();
+            tv_empty.setVisibility(View.VISIBLE);
+        } else {
+            adapter.setFeedList(memoList);
+            adapter.setLongClickItemlistener(longClickListener);
+            adapter.notifyDataSetChanged();
+            tv_empty.setVisibility(View.GONE);
+
+            adapter.setCheckItemlistener(itemCheckListener);
+
+            cb_edit_search_selected_all.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (cb_edit_search_selected_all.isChecked()) {
+                        checkOne.clear();
+                        for (int i = 0; i < memoList.size(); i++) { // 전체선택일경우 checkOne 클리어 후 모든 리스트를 add 해준다. (* 리사이클러뷰 뷰홀더 이슈 그려지지 않은 리스트는 갱신이 되지 않음, 데이터리스트에 들어오지 않음)
+                            checkOne.add(Integer.toString(memoList.get(i).getId()));
+                        }
+                        adapter.setIsAllClick(true);
+                        adapter.setCheckOne(checkOne);
+                        Handler handler = new Handler();
+                        final Runnable r = new Runnable() {  // 쓰레드 post 를 해준 이유는 리사이클러뷰 UI 쓰레드 이슈 떄문
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        };
+                        handler.post(r);
+
+                    } else {
+                        checkOne.clear();
+                        adapter.setIsAllClick(false);
+                        adapter.setCheckOne(checkOne);
+                        Handler handler = new Handler();
+                        final Runnable r = new Runnable() {
+                            public void run() {
+                                adapter.notifyDataSetChanged();
+                            }
+                        };
+                        handler.post(r);
+                    }
+                }
+            });
+        }
+    }
+
+    /**
      * 삭제버튼
      */
     @OnClick(R.id.btn_main_delete)
     public void onClicksubmit() {
 
-        if(checkOne.size()>0) {
+        if (checkOne.size() > 0) {
             DBHelper helper = new DBHelper(this);
             SQLiteDatabase db = helper.getWritableDatabase();
 
@@ -344,107 +349,20 @@ public class SearchMemoActivity extends AppCompatActivity implements SearchMemoC
                 }
             }
             cb_edit_search_selected_all.setVisibility(View.GONE);
-//        checkAll.clear();
+
             checkOne.clear();
             initView();
             ll_edit_search_select_bar.startAnimation(anim_up);
 
-
-
-
-
-
             memoList.clear();
 
-            if (searchText.length() != 0) {
+            onRefreshAdapter();
 
-                DBHelper helper2 = new DBHelper(getActivityContext());
-                SQLiteDatabase db2 = helper2.getWritableDatabase();
-                Cursor cursor = db2.rawQuery("select _id, title, content, date, imagepath from mytable where title like '%" + searchText + "%' or content like '%" + searchText + "%' order by _id desc", null);
-                //결국 cursor 에 select한 값이 들어온다!!
-                while (cursor.moveToNext()) {
-                    memoListDTO memo = new memoListDTO();
-                    memo.setId(Integer.parseInt(cursor.getString(cursor.getColumnIndex("_id"))));
-                    memo.setTitle(cursor.getString(cursor.getColumnIndex("title")));
-                    memo.setContent(cursor.getString(cursor.getColumnIndex("content")));
-                    memo.setDate(cursor.getString(cursor.getColumnIndex("date")));
-                    //memo.setImagePath(cursor.getString(cursor.getColumnIndex("imagepath")));
-                    memoList.add(memo);
-                    //checkAll.add(Integer.toString(memo.getId()));  // 전체선택 리스트를 넣어둔다.
-                }
-                db.close();
-            }
-            if (memoList.size() <= 0) {
-                adapter.setFeedList(memoList);
-                adapter.notifyDataSetChanged();
-                tv_empty.setVisibility(View.VISIBLE);
-            } else {
-                adapter.setFeedList(memoList);
-                adapter.setLongClickItemlistener(longClickListener);
-                adapter.notifyDataSetChanged();
-                tv_empty.setVisibility(View.GONE);
-
-                adapter.setCheckItemlistener(itemCheckListener);
-
-                cb_edit_search_selected_all.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (cb_edit_search_selected_all.isChecked()) {
-                            isFirstCheck = true;
-                            checkOne.clear();
-                            for (int i = 0; i < memoList.size(); i++) { // 전체선택일경우 checkOne 클리어 후 모든 리스트를 add 해준다. (* 리사이클러뷰 뷰홀더 이슈 그려지지 않은 리스트는 갱신이 되지 않음, 데이터리스트에 들어오지 않음)
-                                checkOne.add(Integer.toString(memoList.get(i).getId()));
-                            }
-                            adapter.setIsAllClick(true);
-                            adapter.setCheckOne(checkOne);
-                            Handler handler = new Handler();
-                            final Runnable r = new Runnable() {  // 쓰레드 post 를 해준 이유는 리사이클러뷰 UI 쓰레드 이슈 떄문
-                                public void run() {
-                                    adapter.notifyDataSetChanged();
-                                }
-                            };
-                            handler.post(r);
-
-
-                            //adapter.notifyDataSetChanged();
-                        } else {
-                            isFirstCheck = false;
-                            checkOne.clear();
-                            adapter.setIsAllClick(false);
-                            adapter.setCheckOne(checkOne);
-                            Handler handler = new Handler();
-                            final Runnable r = new Runnable() {
-                                public void run() {
-                                    adapter.notifyDataSetChanged();
-                                }
-                            };
-                            handler.post(r);
-                        }
-                    }
-                });
-
-
-
-
-            }
-
-
-
-
-
-
-
-
-
-
-
-        }else{
+        } else {
             Toast.makeText(getApplicationContext(),
                     "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
         }
-
     }
-
 
 
 }

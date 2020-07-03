@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private MemoAdapter adapter;
 
+    /**
+     * 모든 메모 리스트
+     */
     private ArrayList<memoListDTO> memoList = new ArrayList<memoListDTO>();
 
 
@@ -80,23 +83,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private Animation anim_down;
     private Animation anim_up;
     /**
-     * 체크박스 낱개
+     * 체크박스 선택된 낱개 리스트
      */
     private ArrayList<String> checkOne = new ArrayList<>();
-
-    /**
-     * 체크박스 전체선택 리스트
-     */
-    private ArrayList<String> checkAll = new ArrayList<>();
 
 //    private ArrayList<GsonDTO.Price> priceList = new ArrayList<GsonDTO.Price>();
 
 //    private ArrayList<GsonDTO.Price> selectPriceList = new ArrayList<GsonDTO.Price>();
-
-    /**
-     * 체크박스 전체선택 플래그 전체선택 이면 true 아니면 false.
-     */
-    private boolean isFirstCheck = false;
 
     /**
      * 메인 프레젠터
@@ -167,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     }
 
-
+// ★제이슨 연습용★
 //    public class GsonDTO {
 //        String ret_code;
 //        String ret_msg;
@@ -322,7 +315,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             @Override
             public void onClick(View v) {
                 if (cb_edit_selected_all.isChecked()) {
-                    isFirstCheck = true;
                     checkOne.clear();
                     for (int i = 0; i < memoList.size(); i++) { // 전체선택일경우 checkOne 클리어 후 모든 리스트를 add 해준다. (* 리사이클러뷰 뷰홀더 이슈 그려지지 않은 리스트는 갱신이 되지 않음, 데이터리스트에 들어오지 않음)
                         checkOne.add(Integer.toString(memoList.get(i).getId()));
@@ -337,10 +329,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                     };
                     handler.post(r);
 
-
-                    //adapter.notifyDataSetChanged();
                 } else {
-                    isFirstCheck = false;
                     checkOne.clear();
                     adapter.setIsAllClick(false);
                     adapter.setCheckOne(checkOne);
@@ -363,8 +352,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         if (memoList != null && memoList.size() > 0) {
             tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) + "개");
             adapter.setFeedList(memoList);
-            adapter.setLongClickItemlistener(longClickListener);
-            adapter.setCheckItemlistener(itemCheckListener);
+            adapter.setLongClickItemlistener(longClickListener); // 어뎁터에 롱클릭 리스너 등록
+            adapter.setCheckItemlistener(itemCheckListener); // 어뎁터에 낱개 선택 리스너 등록
             rcMemoList.setAdapter(adapter);
 
             LinearLayoutManager manager = new LinearLayoutManager(this);
@@ -434,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     /**
-     * 리스트 체크박스 리스너
+     * 리스트 낱개 체크박스 리스너
      */
     private CompoundButton.OnClickListener itemCheckListener = new CompoundButton.OnClickListener() {
         @Override
@@ -536,8 +525,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 }
             }
             cb_edit_selected_all.setVisibility(View.GONE);
-//        checkAll.clear();
-            checkOne.clear();
+
+            checkOne.clear(); // 선택된 체크리스트 초기화
             initView();
             ll_edit_select_bar.startAnimation(anim_up);
         }else{
@@ -557,7 +546,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         startActivity(intent);
     }
 
-
+    /**
+     * 검색 버튼
+     */
     @OnClick(R.id.btn_option3)
     @Override
     public void onClickSearchMemo() {
