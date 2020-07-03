@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
 
         initAnimationView();
-        initView();
 
     }
 
@@ -308,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public void onResume() {
         super.onResume();
+        initView();
     }
 
     @Override
@@ -359,6 +359,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         memoList = presenter.callMainInfoDATA();
 
         adapter = new MemoAdapter();
+        //메모 데이터가 있을때
         if (memoList != null && memoList.size() > 0) {
             tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) + "개");
             adapter.setFeedList(memoList);
@@ -502,9 +503,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         if (!adapter.getEditMode()) {
             finish();
         } else {
+            checkOne.clear();
             adapter.setIsAllClick(false);
             adapter.setEditMode(false);
             adapter.notifyDataSetChanged();
+            cb_edit_selected_all.setChecked(false);
             ll_edit_select_bar.startAnimation(anim_up);
             cb_edit_selected_all.setVisibility(View.GONE);
 
