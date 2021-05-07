@@ -24,9 +24,13 @@ public interface MainContract {
     }
 
     interface Presenter extends BasePresenter {
-
+        /**
+         * 메모 조회
+         */
         ArrayList<memoListDTO> callMainInfoDATA();
-
+        /**
+         * 메모 삭제
+         */
         boolean callMainDeleteDATA(boolean isCheck, ArrayList<memoListDTO> allMemoList, ArrayList<String> checkOneMemoList);
 
     }

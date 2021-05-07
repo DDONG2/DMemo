@@ -18,6 +18,7 @@ import com.example.dmemo.Utils.VoiceInputDialog;
 import com.example.dmemo.View.Main.MainActivity;
 import com.example.dmemo.R;
 import com.example.dmemo.Utils.DBHelper;
+import com.example.dmemo.View.Main.MainPresenter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,11 +53,10 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
     private String content;
     private String date;
 
-    @Override
-    public void onClickSave() {
-
-    }
-
+    /**
+     * 메모 디테일 프레젠터
+     */
+    private MemoDetailPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,9 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
 
         setContentView(R.layout.activity_memo_detail_list);
         ButterKnife.bind(this);
+
+        presenter = new MemoDetailPresenter(this);
+        presenter.onStartPresenter();
 
         id = getIntent().getIntExtra("_id", 0);
         title = getIntent().getStringExtra("title");
@@ -78,28 +81,23 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
     }
 
     @OnClick({R.id.btn_submit})
+    @Override
     public void onClickSubmitButton() {
 
-        long now = System.currentTimeMillis();
-        Date dateNow = new Date(now);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
-
-        String date = sdf.format(dateNow);
-
         btn_submit.setVisibility(View.VISIBLE);
-        DBHelper helper = new DBHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("UPDATE mytable SET title = '" + et_detail_title.getText() + "', content = '" + et_detail_content.getText() + "', date = '" + date + "' where _id = '" + id + "';");
-        db.close();
+
+        //callDATA 메모 리스트 저장 프레젠터
+        presenter.callSubmitDATA(et_detail_title.getText(), et_detail_content.getText(), id);
 
         Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);      //이렇게 하면 앱 테스크를 모두 지울 수 있다. (원래는 Activity 가 스택에 쌓이는데 그걸 클리어해준다!)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
 
 
     @OnClick({R.id.btn_add_memo_voice})
+    @Override
     public void onClickVoiceButton() {
         InputMethodManager immDown = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE); // 키보드 숨기기
         immDown.hideSoftInputFromWindow(et_detail_title.getWindowToken(), 0);
@@ -110,9 +108,9 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
             public void onPositiveClicked(String text) {
 
                 String getEdit = et_detail_content.getText().toString();
-                if(getEdit.getBytes().length <= 0) {
+                if (getEdit.getBytes().length <= 0) {
                     et_detail_content.setText(text);
-                } else{
+                } else {
                     et_detail_content.setText(getEdit + " " + text);
                 }
             }
@@ -128,8 +126,7 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
     }
 
 
-
-        @Override
+    @Override
     public Context getActivityContext() {
         return null;
     }
@@ -161,7 +158,7 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
                 if (hasFocus) {
                     //to do
                     btn_submit.setVisibility(View.VISIBLE);
-                   btn_add_memo_voice.setVisibility(View.VISIBLE);
+                    btn_add_memo_voice.setVisibility(View.VISIBLE);
                 }
             }
         });
