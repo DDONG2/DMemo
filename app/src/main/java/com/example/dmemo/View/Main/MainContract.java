@@ -17,12 +17,17 @@ public interface MainContract {
          * 메모 검색 클릭
          */
         void onClickSearchMemo();
+        /**
+         * 메모 삭제 클릭
+         */
+        void onClickDelete();
     }
 
     interface Presenter extends BasePresenter {
 
         ArrayList<memoListDTO> callMainInfoDATA();
 
+        boolean callMainDeleteDATA(boolean isCheck, ArrayList<memoListDTO> allMemoList, ArrayList<String> checkOneMemoList);
 
     }
 

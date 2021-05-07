@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -40,12 +41,12 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
 
-    private MemoAdapter adapter;
+    private MemoAdapter mAdapter = new MemoAdapter();
 
     /**
      * 모든 메모 리스트
      */
-    private ArrayList<memoListDTO> memoList = new ArrayList<memoListDTO>();
+    private ArrayList<memoListDTO> mMemoList = new ArrayList<memoListDTO>();
 
 
     @BindView(R.id.btn_option3)
@@ -142,27 +143,27 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             public void onClick(View v) {
                 if (cb_edit_selected_all.isChecked()) {
                     checkOne.clear();
-                    for (int i = 0; i < memoList.size(); i++) { // 전체선택일경우 checkOne 클리어 후 모든 리스트를 add 해준다. (* 리사이클러뷰 뷰홀더 이슈 그려지지 않은 리스트는 갱신이 되지 않음, 데이터리스트에 들어오지 않음)
-                        checkOne.add(Integer.toString(memoList.get(i).getId()));
+                    for (int i = 0; i < mMemoList.size(); i++) { // 전체선택일경우 checkOne 클리어 후 모든 리스트를 add 해준다. (* 리사이클러뷰 뷰홀더 이슈 그려지지 않은 리스트는 갱신이 되지 않음, 데이터리스트에 들어오지 않음)
+                        checkOne.add(Integer.toString(mMemoList.get(i).getId()));
                     }
-                    adapter.setIsAllClick(true);
-                    adapter.setCheckOne(checkOne);
+                    mAdapter.setIsAllClick(true);
+                    mAdapter.setCheckOne(checkOne);
                     Handler handler = new Handler();
                     final Runnable r = new Runnable() {  // 쓰레드 post 를 해준 이유는 리사이클러뷰 UI 쓰레드 이슈 떄문
                         public void run() {
-                            adapter.notifyDataSetChanged();
+                            mAdapter.notifyDataSetChanged();
                         }
                     };
                     handler.post(r);
 
                 } else {
                     checkOne.clear();
-                    adapter.setIsAllClick(false);
-                    adapter.setCheckOne(checkOne);
+                    mAdapter.setIsAllClick(false);
+                    mAdapter.setCheckOne(checkOne);
                     Handler handler = new Handler();
                     final Runnable r = new Runnable() {
                         public void run() {
-                            adapter.notifyDataSetChanged();
+                            mAdapter.notifyDataSetChanged();
                         }
                     };
                     handler.post(r);
@@ -170,22 +171,25 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             }
         });
 
-        memoList.clear();
+        mMemoList.clear();
         //callDATA 메모 리스트 호출 프레젠터
-        memoList = presenter.callMainInfoDATA();
+        mMemoList = presenter.callMainInfoDATA();
 
-        adapter = new MemoAdapter();
+        //기본은 editmode = false 이다.
+        mAdapter.setEditMode(false);
+
         //메모 데이터가 있을때
-        if (memoList != null && memoList.size() > 0) {
-            tv_list_conut.setText("노트" + " " + String.valueOf(memoList.size()) + "개");
-            adapter.setFeedList(memoList);
-            adapter.setLongClickItemlistener(longClickListener); // 어뎁터에 롱클릭 리스너 등록
-            adapter.setCheckItemlistener(itemCheckListener); // 어뎁터에 낱개 선택 리스너 등록
-            rcMemoList.setAdapter(adapter);
+        if (mMemoList != null && mMemoList.size() > 0) {
+            tv_list_conut.setText("노트" + " " + String.valueOf(mMemoList.size()) + "개");
+            mAdapter.setFeedList(mMemoList);
+            mAdapter.setLongClickItemlistener(longClickListener); // 어뎁터에 롱클릭 리스너 등록
+            mAdapter.setCheckItemlistener(itemCheckListener); // 어뎁터에 낱개 선택 리스너 등록
 
             LinearLayoutManager manager = new LinearLayoutManager(this);
             manager.setOrientation(LinearLayoutManager.VERTICAL);
             rcMemoList.setLayoutManager(manager);
+
+            rcMemoList.setAdapter(mAdapter);
 
             rcMemoList.setVisibility(View.VISIBLE);
             tv_empty.setVisibility(View.GONE);
@@ -193,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         } else {
             rcMemoList.setVisibility(View.GONE);
             tv_empty.setVisibility(View.VISIBLE);
-            tv_list_conut.setText("0");
+            tv_list_conut.setText("노트 0개");
         }
     }
 
@@ -262,21 +266,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             if(check.isChecked()) {
                 check.setChecked(true);
                 checkOne.add(Integer.toString(memoId));
-                if (checkOne.size() > 0 && checkOne.size() == memoList.size()) {
+                if (checkOne.size() > 0 && checkOne.size() == mMemoList.size()) {
 
                     cb_edit_selected_all.setChecked(true);
-
-                    adapter.setIsAllClick(true);
                     //전체선택 true
+                    mAdapter.setIsAllClick(true);
+
                 }
-                //전체선택 false
+
             }else{
                 check.setChecked(false);
                 checkOne.remove(Integer.toString(memoId));
 
                 cb_edit_selected_all.setChecked(false);
 
-                adapter.setIsAllClick(false);
+                //전체선택 false
+                mAdapter.setIsAllClick(false);
 
             }
         }
@@ -292,8 +297,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             Toast.makeText(getApplicationContext(),
                     "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
             cb_edit_selected_all.setVisibility(View.VISIBLE);
-            adapter.setEditMode(true);
-            adapter.notifyDataSetChanged();
+            mAdapter.setEditMode(true);
+            mAdapter.notifyDataSetChanged();
             ll_edit_select_bar.startAnimation(anim_down);
             // 리턴값이 있다
             // 이메서드에서 이벤트에대한 처리를 끝냈음
@@ -316,13 +321,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void onBackPressed() {
-        if (!adapter.getEditMode()) {
+        if (!mAdapter.getEditMode()) {
             finish();
         } else { // 수정모드일때
             checkOne.clear();
-            adapter.setIsAllClick(false);
-            adapter.setEditMode(false);
-            adapter.notifyDataSetChanged();
+            mAdapter.setIsAllClick(false);
+            mAdapter.setEditMode(false);
+            mAdapter.notifyDataSetChanged();
             cb_edit_selected_all.setChecked(false);
             ll_edit_select_bar.startAnimation(anim_up);
             cb_edit_selected_all.setVisibility(View.GONE);
@@ -334,33 +339,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      * 삭제버튼
      */
     @OnClick(R.id.btn_main_delete)
-    public void onClicksubmit() {
+    public void onClickDelete() {
 
-        if(checkOne.size()>0) {
-            DBHelper helper = new DBHelper(this);
-            SQLiteDatabase db = helper.getWritableDatabase();
+        if(checkOne.size() > 0) {
+            //callDATA 메모 리스트 삭제 프레젠터
+            presenter.callMainDeleteDATA(cb_edit_selected_all.isChecked(), mMemoList, checkOne);
 
-            if (cb_edit_selected_all.isChecked()) { //전체선택이 되어있을땐 모든 데이터를 지운다.
-                for (int i = 0; i < memoList.size(); i++) {
-                    String sql = "delete from  mytable where _id = '" + memoList.get(i).getId() + "'";
-                    db.execSQL(sql);
-                }
-            } else {
-                for (int i = 0; i < checkOne.size(); i++) {  //전체선택이 아닐경우 선택된 데이터만 지운다.
-                    String sql = "delete from  mytable where _id = '" + checkOne.get(i) + "'";
-                    db.execSQL(sql);
-                }
-            }
             cb_edit_selected_all.setVisibility(View.GONE);
 
             checkOne.clear(); // 선택된 체크리스트 초기화
-            initView();
             ll_edit_select_bar.startAnimation(anim_up);
+            initView();
+
         }else{
             Toast.makeText(getApplicationContext(),
                     "삭제할 목록을 선택하세요.", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     /**

@@ -46,5 +46,8 @@ public class MainPresenter implements MainContract.Presenter, CommonNetworkCallb
         return repository.callMainInfoDATA();
     }
 
-
+    @Override
+    public boolean callMainDeleteDATA(boolean isCheck, ArrayList<memoListDTO> allMemoList, ArrayList<String> checkOneMemoList) {
+       return  repository.callMainDeleteDATA(isCheck, allMemoList, checkOneMemoList);
+    }
 }
