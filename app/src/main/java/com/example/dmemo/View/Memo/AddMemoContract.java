@@ -9,18 +9,20 @@ public interface AddMemoContract {
         /**
          * 메모 저장 클릭
          */
-        void onClickSave();
+        void onClickAddSubmitButton();
 
         /**
-         * 음성 인식 클릭
+         * 메모 음성 작성 클릭
          */
-        void onClickVoice();
+        void onClickAddVoiceButton();
 
     }
 
     interface Presenter extends BasePresenter {
-
-        //void callMainInfoAPI(String cityCd, String langSelCd);
+        /**
+         * 메모 저장
+         */
+        boolean callDetailAddDATA(String cityCd, String langSelCd);
 
 
     }

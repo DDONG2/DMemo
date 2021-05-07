@@ -12,19 +12,19 @@ public interface MemoDetailContract {
         /**
          * 메모 저장 클릭
          */
-        void onClickSubmitButton();
+        void onClickDetailSubmitButton();
 
         /**
          * 메모 음성 작성 클릭
          */
-        void onClickVoiceButton();
+        void onClickDetailVoiceButton();
     }
 
     interface Presenter extends BasePresenter {
         /**
-         * 메모 저장
+         * 메모 수정 후 저장
          */
-        boolean callSubmitDATA(Editable memoTitle, Editable memoContent, int memoId);
+        boolean callDetailSubmitDATA(String memoTitle, String memoContent, int memoId);
 
 
     }

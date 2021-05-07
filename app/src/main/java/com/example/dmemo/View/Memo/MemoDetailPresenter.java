@@ -38,8 +38,8 @@ public class MemoDetailPresenter implements MemoDetailContract.Presenter, Common
     }
 
     @Override
-    public boolean callSubmitDATA(Editable memoTitle, Editable memoContent, int memoId) {
-        return repository.callSubmitDATA(memoTitle, memoContent, memoId);
+    public boolean callDetailSubmitDATA(String memoTitle, String memoContent, int memoId) {
+        return repository.callDetailSubmitDATA(memoTitle, memoContent, memoId);
     }
 }
 

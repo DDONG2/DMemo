@@ -54,6 +54,10 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
     @BindView(R.id.btn_add_memo_voice)
     Button btn_add_memo_voice;
 
+    /**
+     * 메모 추가 프레젠터
+     */
+    private AddMemoPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,8 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
         setContentView(R.layout.activity_add_memo);
         ButterKnife.bind(this);
 
+        presenter = new AddMemoPresenter(this);
+        presenter.onStartPresenter();
 
         // Edit Text 포커스 주고 키보드 올리기
         et_title.requestFocus();
@@ -89,22 +95,11 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
 
     @OnClick(R.id.btn_add_memo_submit)
     @Override
-    public void onClickSave() {
+    public void onClickAddSubmitButton() {
 
-        String title = et_title.getText().toString();
-        String content = et_content.getText().toString();
 
-        long now = System.currentTimeMillis();
-        Date dateNow = new Date(now);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy년 MM월 dd일 HH:mm");
-
-        String date = sdf.format(dateNow);
-
-        DBHelper helper = new DBHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("insert into mytable (title, content, date) values (?,?,?)",
-                new String[]{title, content, date});
-        db.close();
+        //callDATA 메모 리스트 저장 프레젠터
+        presenter.callDetailAddDATA(et_title.getText().toString(), et_content.getText().toString());
 
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE); // 키보드 숨기기
         imm.hideSoftInputFromWindow(et_title.getWindowToken(), 0);
@@ -119,7 +114,7 @@ public class AddMemoActivity extends AppCompatActivity implements AddMemoContrac
 
     @OnClick(R.id.btn_add_memo_voice)
     @Override
-    public void onClickVoice() {
+    public void onClickAddVoiceButton() {
         InputMethodManager immDown = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE); // 키보드 숨기기
         immDown.hideSoftInputFromWindow(et_title.getWindowToken(), 0);
         immDown.hideSoftInputFromWindow(et_content.getWindowToken(), 0);

@@ -10,7 +10,7 @@ import com.example.dmemo.Utils.DBHelper;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MemoDetailRepository extends BaseRepository {
+public class AddMemoRepository extends BaseRepository {
 
 
 
@@ -18,13 +18,12 @@ public class MemoDetailRepository extends BaseRepository {
     private Context context;
 
 
-    public MemoDetailRepository(Context context) {
+    public AddMemoRepository(Context context) {
         this.context = context;
-
 
     }
 
-    public boolean callDetailSubmitDATA(String memoTitle, String memoContent, int memoId) {
+    public boolean callDetailAddDATA(String memoTitle, String memoContent) {
 
         long now = System.currentTimeMillis();
         Date dateNow = new Date(now);
@@ -34,7 +33,8 @@ public class MemoDetailRepository extends BaseRepository {
 
         DBHelper helper = new DBHelper(context);
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL("UPDATE mytable SET title = '" + memoTitle + "', content = '" + memoContent + "', date = '" + date + "' where _id = '" + memoId + "';");
+        db.execSQL("insert into mytable (title, content, date) values (?,?,?)",
+                new String[]{memoTitle, memoContent, date});
         db.close();
 
         return true;

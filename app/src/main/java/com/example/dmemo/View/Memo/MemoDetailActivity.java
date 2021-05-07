@@ -42,11 +42,11 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
     @BindView(R.id.sv_detail_scroll)
     ScrollView sv_detail_scroll;
 
-    @BindView(R.id.btn_submit)
-    Button btn_submit;
+    @BindView(R.id.btn_memo_detail_submit)
+    Button btn_memo_detail_submit;
 
-    @BindView(R.id.btn_add_memo_voice)
-    Button btn_add_memo_voice;
+    @BindView(R.id.btn_memo_detail_voice)
+    Button btn_memo_detail_voice;
 
     private int id;
     private String title;
@@ -80,14 +80,14 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
         touchListener();
     }
 
-    @OnClick({R.id.btn_submit})
+    @OnClick({R.id.btn_memo_detail_submit})
     @Override
-    public void onClickSubmitButton() {
+    public void onClickDetailSubmitButton() {
 
-        btn_submit.setVisibility(View.VISIBLE);
+        btn_memo_detail_submit.setVisibility(View.VISIBLE);
 
         //callDATA 메모 리스트 저장 프레젠터
-        presenter.callSubmitDATA(et_detail_title.getText(), et_detail_content.getText(), id);
+        presenter.callDetailSubmitDATA(et_detail_title.getText().toString(), et_detail_content.getText().toString(), id);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -96,9 +96,9 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
     }
 
 
-    @OnClick({R.id.btn_add_memo_voice})
+    @OnClick({R.id.btn_memo_detail_voice})
     @Override
-    public void onClickVoiceButton() {
+    public void onClickDetailVoiceButton() {
         InputMethodManager immDown = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE); // 키보드 숨기기
         immDown.hideSoftInputFromWindow(et_detail_title.getWindowToken(), 0);
         immDown.hideSoftInputFromWindow(et_detail_content.getWindowToken(), 0);
@@ -147,8 +147,8 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     //to do
-                    btn_submit.setVisibility(View.VISIBLE);
-                    btn_add_memo_voice.setVisibility(View.VISIBLE);
+                    btn_memo_detail_submit.setVisibility(View.VISIBLE);
+                    btn_memo_detail_voice.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -157,8 +157,8 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     //to do
-                    btn_submit.setVisibility(View.VISIBLE);
-                    btn_add_memo_voice.setVisibility(View.VISIBLE);
+                    btn_memo_detail_submit.setVisibility(View.VISIBLE);
+                    btn_memo_detail_voice.setVisibility(View.VISIBLE);
                 }
             }
         });
