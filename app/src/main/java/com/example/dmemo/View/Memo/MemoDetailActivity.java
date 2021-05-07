@@ -128,7 +128,7 @@ public class MemoDetailActivity extends AppCompatActivity implements MemoDetailC
 
     @Override
     public Context getActivityContext() {
-        return null;
+        return this;
     }
 
     @Override
